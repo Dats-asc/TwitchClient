@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TwitchClient</string>
+
+    <!--    Bottom navigation titles-->
+    <string name="title_games">Игры</string>
+    <string name="title_popular">Популярное</string>
+    <string name="title_followings">Подписки</string>
+
 </resources>

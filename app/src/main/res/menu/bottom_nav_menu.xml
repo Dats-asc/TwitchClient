@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_games"
+        android:icon="@drawable/ic_baseline_games_24"
+        android:enabled="true"
+        android:title="@string/title_games" />
+
+    <item
+        android:id="@+id/navigation_popular"
+        android:icon="@drawable/ic_baseline_groups_24"
+        android:enabled="true"
+        android:title="@string/title_popular" />
+
+    <item
+        android:id="@+id/navigation_followings"
+        android:icon="@drawable/ic_baseline_subscriptions_24"
+        android:enabled="true"
+        android:title="@string/title_followings" />
+</menu>

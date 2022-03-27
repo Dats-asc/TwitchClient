@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_navigation"
+    app:startDestination="@id/followingsFragment">
+
+    <fragment
+        android:id="@+id/gamesFragment"
+        android:name="com.example.twitchclient.ui.games.GamesFragment"
+        android:label="games_fragment"
+        tools:layout="@layout/games_fragment" />
+    <fragment
+        android:id="@+id/popularFragment"
+        android:name="com.example.twitchclient.ui.popular.PopularFragment"
+        android:label="popular_fragment"
+        tools:layout="@layout/popular_fragment" />
+    <fragment
+        android:id="@+id/followingsFragment"
+        android:name="com.example.twitchclient.ui.followings.FollowingsFragment"
+        android:label="followings_fragment"
+        tools:layout="@layout/followings_fragment" />
+</navigation>
