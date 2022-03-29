@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_baseline_games_24.xml" value="0.1945" />
+        <entry key="app/src/main/res/drawable/ic_baseline_groups_24.xml" value="0.1945" />
         <entry key="app/src/main/res/layout/activity_authorization.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/followings_fragment.xml" value="0.2953125" />
@@ -11,6 +13,7 @@
         <entry key="app/src/main/res/layout/popular_fragment.xml" value="0.2953125" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.2953125" />
         <entry key="app/src/main/res/menu/bottom_nav_meny.xml" value="0.2953125" />
+        <entry key="app/src/main/res/menu/toolbar_menu.xml" value="0.2953125" />
         <entry key="app/src/main/res/xml/searchable.xml" value="0.2953125" />
       </map>
     </option>

@@ -1,16 +1,16 @@
 package com.example.twitchclient.ui.followings
 
-import android.content.Intent
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.twitchclient.R
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.twitchclient.databinding.FollowingsFragmentBinding
-import com.example.twitchclient.ui.auth.AuthFragment
-import com.example.twitchclient.ui.auth.AuthorizationActivity
+import com.example.twitchclient.ui.MainActivity
+
 
 class FollowingsFragment : Fragment() {
 
@@ -22,11 +22,14 @@ class FollowingsFragment : Fragment() {
 
     private lateinit var binding: FollowingsFragmentBinding
 
+    private var supportActionBar: ActionBar? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = FollowingsFragmentBinding.inflate(inflater, container, false)?.let {
         binding = it
+        supportActionBar = (activity as AppCompatActivity?)!!.supportActionBar
         it.root
     }
 
@@ -34,10 +37,7 @@ class FollowingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnSignin.setOnClickListener {
-            parentFragmentManager.beginTransaction().run {
-                add(R.id.auth_fragment_container, AuthFragment())
-                commit()
-            }
+            (activity as MainActivity?)?.onAuthFragmentOpen()
         }
     }
 
