@@ -4,12 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.twitchclient.databinding.FollowingsFragmentBinding
-import com.example.twitchclient.ui.MainActivity
+import com.example.twitchclient.ui.auth.AuthFragment
+import com.example.twitchclient.ui.navigation.navigator
 
 
 class FollowingsFragment : Fragment() {
@@ -22,22 +21,19 @@ class FollowingsFragment : Fragment() {
 
     private lateinit var binding: FollowingsFragmentBinding
 
-    private var supportActionBar: ActionBar? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = FollowingsFragmentBinding.inflate(inflater, container, false)?.let {
-        binding = it
-        supportActionBar = (activity as AppCompatActivity?)!!.supportActionBar
-        it.root
+        binding = FollowingsFragmentBinding.inflate(inflater, container, false)
+        binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnSignin.setOnClickListener {
-            (activity as MainActivity?)?.onAuthFragmentOpen()
+            navigator().pushFragment(AuthFragment())
         }
     }
 
