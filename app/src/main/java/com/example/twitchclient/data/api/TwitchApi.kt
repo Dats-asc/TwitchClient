@@ -1,8 +1,7 @@
 package com.example.twitchclient.data.api
 
-import com.example.twitchclient.data.responses.twitch.user.Data
+import com.example.twitchclient.data.responses.twitch.stream.StreamsResponse
 import com.example.twitchclient.data.responses.twitch.user.UserResponse
-import com.example.twitchclient.domain.entity.user.User
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,9 +11,12 @@ interface TwitchApi {
     suspend fun pingUser() : UserResponse
 
     @GET("https://api.twitch.tv/helix/users")
-    suspend fun getUserById(@Query("id") id: Int) : Data
+    suspend fun getUserById(@Query("id") id: String) : UserResponse
 
     @GET("https://api.twitch.tv/helix/users")
-    suspend fun getUserByLogin(@Query("login") login: String) : Data
+    suspend fun getUserByLogin(@Query("login") login: String) : UserResponse
+
+    @GET("https://api.twitch.tv/helix/streams/followed")
+    suspend fun getFollowedStreams(@Query("user_id") userId: String) : StreamsResponse
 
 }

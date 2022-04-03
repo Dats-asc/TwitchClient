@@ -1,21 +1,30 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <style name="Theme.TwitchClient" parent="ThemeOverlay.AppCompat.ActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
 
 
     <style name="Toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="android:background">@color/material_dynamic_neutral20</item>
+        <item name="android:background">#4d4d4d</item>
         <item name="theme">@style/ThemeOverlay.Material3.Dark</item>
     </style>
 
     <style name="BottomNavigation">
         <item name="theme">@style/ThemeOverlay.Material3.Dark</item>
-        <item name="android:background">@color/material_dynamic_neutral20</item>
+        <item name="android:background">#4d4d4d</item>
     </style>
 
     <style name="MainFragmentStyle">
-        <item name="android:background">@color/material_dynamic_neutral40</item>
+        <item name="android:background">#666666</item>
         <item name="android:padding">8dp</item>
     </style>
 </resources>

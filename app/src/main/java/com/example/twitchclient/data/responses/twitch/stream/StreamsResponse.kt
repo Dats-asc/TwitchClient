@@ -1,6 +1,6 @@
 package com.example.twitchclient.data.responses.twitch.stream
 
-data class StreamResponse(
-    val `data`: List<Data>,
+data class StreamsResponse(
+    val `data`: List<StreamData>,
     val pagination: Pagination
 )

@@ -2,16 +2,19 @@ package com.example.twitchclient.data.repository
 
 import com.example.twitchclient.Constants
 import com.example.twitchclient.data.api.TwitchApi
-import com.example.twitchclient.data.responses.twitch.user.Data
-import com.example.twitchclient.data.responses.twitch.user.UserResponse
+import com.example.twitchclient.data.api.mapper.TwitchMapper
+import com.example.twitchclient.domain.entity.streams.Streams
+import com.example.twitchclient.domain.entity.user.User
+import com.example.twitchclient.domain.repository.TwitchRepository
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class TwitchRepositoryImpl(
-    userAccessToken: String
-) : TwitchApi {
+    private val userAccessToken: String,
+    private val twitchMapper: TwitchMapper
+) : TwitchRepository {
 
     private val BASE_URL = "https://api.twitch.tv/helix/"
 
@@ -27,7 +30,7 @@ class TwitchRepositoryImpl(
                 request().newBuilder()
                     .url(updatedRequestUrl)
                     .addHeader(CLIENT_ID_QUERY_PARAMETER, Constants.CLIENT_ID)
-                    .addHeader(AUTH_QUERY_PARAMETER, "Bearer ${userAccessToken}")
+                    .addHeader(AUTH_QUERY_PARAMETER, "Bearer $userAccessToken")
                     .build()
             )
         }
@@ -48,16 +51,20 @@ class TwitchRepositoryImpl(
             .create(TwitchApi::class.java)
     }
 
-    override suspend fun pingUser(): UserResponse {
-        return api.pingUser()
+    override suspend fun pingUser(): User {
+        return twitchMapper.mapUserResponse(api.pingUser())
     }
 
-    override suspend fun getUserById(id: Int): Data {
-        return api.getUserById(id)
+    override suspend fun getUserById(id: String): User {
+        return twitchMapper.mapUserResponse(api.getUserById(id))
     }
 
-    override suspend fun getUserByLogin(login: String): Data {
-        return api.getUserByLogin(login)
+    override suspend fun getUserByLogin(login: String): User {
+        return twitchMapper.mapUserResponse(api.getUserByLogin(login))
+    }
+
+    override suspend fun getFollowedStreams(userId: String) : Streams {
+        return twitchMapper.mapStreamResponse(api.getFollowedStreams(userId))
     }
 
 }

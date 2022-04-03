@@ -1,6 +1,6 @@
 package com.example.twitchclient.data.responses.twitch.stream
 
-data class Data(
+data class StreamData(
     val game_id: String,
     val game_name: String,
     val id: String,

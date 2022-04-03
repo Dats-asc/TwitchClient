@@ -85,7 +85,6 @@ class MainActivity : AppCompatActivity(), Navigator {
                     onBackPressed()
                     supportActionBar?.setDisplayHomeAsUpEnabled(false)
                     supportActionBar?.setDisplayShowHomeEnabled(false)
-                    //binding.bottomNavigationView.visibility = View.VISIBLE
                 }
             }
         }
@@ -138,10 +137,6 @@ class MainActivity : AppCompatActivity(), Navigator {
         } else {
             binding.bottomNavigationView.visibility = View.VISIBLE
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
     }
 
     override fun pushFragment(fragment: Fragment) {

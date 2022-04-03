@@ -1,6 +1,6 @@
 package com.example.twitchclient.data.responses.twitch.user
 
-data class Data(
+data class UserData(
     val broadcaster_type: String,
     val created_at: String,
     val description: String,

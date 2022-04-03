@@ -10,6 +10,7 @@ import android.webkit.WebViewClient
 import androidx.lifecycle.lifecycleScope
 import com.example.twitchclient.Constants
 import com.example.twitchclient.R
+import com.example.twitchclient.data.api.mapper.TwitchMapper
 import com.example.twitchclient.data.repository.TwitchRepositoryImpl
 import com.example.twitchclient.databinding.GamesFragmentBinding
 import com.example.twitchclient.domain.usecases.twitch.PingUserUseCase
@@ -40,7 +41,7 @@ class GamesFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(GamesViewModel::class.java)
 
-        pingUserUseCase = PingUserUseCase(TwitchRepositoryImpl((activity as MainActivity).getAccessToken() ?: ""))
+        pingUserUseCase = PingUserUseCase(TwitchRepositoryImpl((activity as MainActivity).getAccessToken() ?: "", TwitchMapper()))
 
         binding.token.text = (activity as MainActivity).getAccessToken() ?: "not found"
 
@@ -52,7 +53,7 @@ class GamesFragment : Fragment() {
         lifecycleScope.launch {
             var user = pingUserUseCase.invoke()
 
-            binding.userInfo.text = user.data[0].login + "  " + user.data[0].id
+            binding.userInfo.text = user.login + "  " + user.id
         }
     }
 
