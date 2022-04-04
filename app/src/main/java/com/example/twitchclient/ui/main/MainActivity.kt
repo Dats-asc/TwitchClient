@@ -1,4 +1,4 @@
-package com.example.twitchclient.ui
+package com.example.twitchclient.ui.main
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.example.twitchclient.App
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.ActivityMainBinding
 import com.example.twitchclient.ui.auth.AuthFragment
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
