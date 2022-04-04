@@ -6,7 +6,7 @@ import com.example.twitchclient.di.DaggerAppComponent
 import com.example.twitchclient.di.module.AppModule
 import com.example.twitchclient.di.module.NetModule
 
-class App : Application() {
+class MyApp : Application() {
 
     lateinit var appComponent: AppComponent
 

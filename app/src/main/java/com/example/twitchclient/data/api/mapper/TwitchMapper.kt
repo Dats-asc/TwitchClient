@@ -1,10 +1,13 @@
 package com.example.twitchclient.data.api.mapper
 
+import com.example.twitchclient.R
 import com.example.twitchclient.data.responses.twitch.stream.StreamData
 import com.example.twitchclient.data.responses.twitch.stream.StreamsResponse
 import com.example.twitchclient.data.responses.twitch.user.UserResponse
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.domain.entity.user.User
+import java.lang.Integer.getInteger
+import java.security.AccessController.getContext
 
 class TwitchMapper {
 
@@ -45,8 +48,8 @@ class TwitchMapper {
             started_at = streamData.started_at,
             language = streamData.language,
             thumbnail_url = with(streamData.thumbnail_url){
-                this.replace("{width}", "1280")
-                    .replace("{height}", "720")
+                this.replace("{width}", "640")
+                    .replace("{height}", "360")
             }
         )
 }

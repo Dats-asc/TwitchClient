@@ -30,11 +30,8 @@ class FollowingsFragment : Fragment() {
 
     private var streamAdapter: StreamAdapter? = null
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-
     private val viewModel: FollowingsViewModel by viewModels{
-        factory
+        (activity as MainActivity).factory
     }
 
     override fun onCreateView(
@@ -42,6 +39,8 @@ class FollowingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = FollowingsFragmentBinding.inflate(inflater, container, false)?.let {
         binding = FollowingsFragmentBinding.inflate(inflater, container, false)
+        initObservers()
+        viewModel.getFolloweStreams()
         binding.root
     }
 
@@ -51,18 +50,16 @@ class FollowingsFragment : Fragment() {
 //        binding.btnSignin.setOnClickListener {
 //            navigator().pushFragment(AuthFragment())
 //        }
-
-        initObservers()
     }
 
     private fun initObservers(){
-        val test = 0
         viewModel.queryStreams.observe(activity as MainActivity){
             it.fold(
                 onSuccess = { streams ->
                     streamAdapter = StreamAdapter(streams.data, {
                         //TODO on recyclerview item click listener
                     })
+                    binding.rvStreams.adapter = streamAdapter
                 }, onFailure = {
                     Snackbar.make(binding.root, "Fail", Snackbar.LENGTH_LONG).show()
                 }
