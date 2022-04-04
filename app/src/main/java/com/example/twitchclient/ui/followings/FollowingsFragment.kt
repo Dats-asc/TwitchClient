@@ -19,6 +19,7 @@ import com.example.twitchclient.ui.MainActivity
 import com.example.twitchclient.ui.auth.AuthFragment
 import com.example.twitchclient.ui.navigation.navigator
 import kotlinx.coroutines.launch
+import okhttp3.Interceptor
 import java.lang.Exception
 
 
@@ -59,19 +60,14 @@ class FollowingsFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(FollowingsViewModel::class.java)
     }
 
-    private fun initAdapter(){
+    private fun initAdapter() {
         getFollowedStreamsUseCase = GetFollowedStreamsUseCase(
             TwitchRepositoryImpl((activity as MainActivity).getAccessToken() ?: "", TwitchMapper())
         )
         lifecycleScope.launch {
-            var streams: Streams? = null
-            try {
-                streams = getFollowedStreamsUseCase.invoke("211258578")
-            } catch (ex: Exception){
-                Log.e("", ex.message.toString())
-            }
+            val streams = getFollowedStreamsUseCase.invoke("211258578")
 
-            streamAdapter = StreamAdapter(streams!!.data){
+            streamAdapter = StreamAdapter(streams!!.data) {
 
             }
 

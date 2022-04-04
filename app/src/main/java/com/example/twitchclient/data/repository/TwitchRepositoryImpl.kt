@@ -63,7 +63,7 @@ class TwitchRepositoryImpl(
         return twitchMapper.mapUserResponse(api.getUserByLogin(login))
     }
 
-    override suspend fun getFollowedStreams(userId: String) : Streams {
+    override suspend fun getFollowedStreams(userId: String): Streams {
         return twitchMapper.mapStreamResponse(api.getFollowedStreams(userId))
     }
 
