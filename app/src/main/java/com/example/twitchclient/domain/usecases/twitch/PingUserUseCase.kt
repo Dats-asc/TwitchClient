@@ -1,10 +1,11 @@
 package com.example.twitchclient.domain.usecases.twitch
 
-import com.example.twitchclient.data.repository.TwitchRepositoryImpl
 import com.example.twitchclient.domain.entity.user.User
+import com.example.twitchclient.domain.repository.TwitchRepository
+import javax.inject.Inject
 
-class PingUserUseCase(
-    val twitchRepository: TwitchRepositoryImpl
+class PingUserUseCase @Inject constructor(
+    private val twitchRepository: TwitchRepository
 ) {
 
     suspend operator fun invoke(): User {
