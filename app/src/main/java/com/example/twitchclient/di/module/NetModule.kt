@@ -1,5 +1,6 @@
 package com.example.twitchclient.di.module
 
+import android.content.Context
 import com.example.twitchclient.Constants
 import com.example.twitchclient.data.api.TwitchApi
 import dagger.Module
@@ -21,7 +22,9 @@ class NetModule {
 
     @Provides
     @Named("authInterceptor")
-    fun authInterceptor(): Interceptor = Interceptor { chain ->
+    fun authInterceptor(
+        applicationContext: Context
+    ): Interceptor = Interceptor { chain ->
         chain.run {
             val updatedRequestUrl = request().url.newBuilder()
                 .build()
@@ -30,7 +33,15 @@ class NetModule {
                 request().newBuilder()
                     .url(updatedRequestUrl)
                     .addHeader(CLIENT_ID_QUERY_PARAMETER, Constants.CLIENT_ID)
-                    .addHeader(AUTH_QUERY_PARAMETER, "Bearer $USER_ACCESS_TOKEN")
+                    .addHeader(
+                        AUTH_QUERY_PARAMETER,
+                        "Bearer ${
+                            applicationContext.getSharedPreferences(
+                                "USER_PREFERENCES",
+                                Context.MODE_PRIVATE
+                            ).getString("USER_ACCESS_TOKEN_VALUE", "")
+                        }"
+                    )
                     .build()
             )
         }
