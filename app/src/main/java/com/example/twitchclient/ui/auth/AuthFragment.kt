@@ -9,12 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.example.twitchclient.R
 import com.example.twitchclient.databinding.AuthFragmentBinding
-import com.example.twitchclient.ui.MainActivity
+import com.example.twitchclient.ui.main.MainActivity
 
 class AuthFragment : Fragment() {
 

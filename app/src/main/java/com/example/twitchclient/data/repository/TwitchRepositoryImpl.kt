@@ -10,9 +10,9 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class TwitchRepositoryImpl(
-    private val userAccessToken: String,
+class TwitchRepositoryImpl @Inject constructor(
     private val twitchMapper: TwitchMapper
 ) : TwitchRepository {
 
@@ -20,6 +20,7 @@ class TwitchRepositoryImpl(
 
     private val AUTH_QUERY_PARAMETER = "Authorization"
     private val CLIENT_ID_QUERY_PARAMETER = "Client-Id"
+    private val USER_ACCESS_TOKEN = "gsnsg8g0qjhr6d4wvniiu0dfvrxxqv"
 
     private val authInterceptor = Interceptor { chain ->
         chain.run {
@@ -30,7 +31,7 @@ class TwitchRepositoryImpl(
                 request().newBuilder()
                     .url(updatedRequestUrl)
                     .addHeader(CLIENT_ID_QUERY_PARAMETER, Constants.CLIENT_ID)
-                    .addHeader(AUTH_QUERY_PARAMETER, "Bearer $userAccessToken")
+                    .addHeader(AUTH_QUERY_PARAMETER, "Bearer $USER_ACCESS_TOKEN")
                     .build()
             )
         }

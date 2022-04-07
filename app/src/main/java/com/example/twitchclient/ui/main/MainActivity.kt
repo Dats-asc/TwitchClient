@@ -1,13 +1,15 @@
-package com.example.twitchclient.ui
+package com.example.twitchclient.ui.main
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.example.twitchclient.MyApp
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.ActivityMainBinding
 import com.example.twitchclient.ui.auth.AuthFragment
@@ -15,6 +17,8 @@ import com.example.twitchclient.ui.followings.FollowingsFragment
 import com.example.twitchclient.ui.games.GamesFragment
 import com.example.twitchclient.ui.navigation.Navigator
 import com.example.twitchclient.ui.popular.PopularFragment
+import com.example.twitchclient.utils.ViewModelFactory
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), Navigator {
 
@@ -26,6 +30,13 @@ class MainActivity : AppCompatActivity(), Navigator {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var preferences: SharedPreferences
+
+    @Inject
+    lateinit var factory: ViewModelFactory
+
+    private val viewModel: MainViewModel by viewModels{
+        factory
+    }
 
     private var currentNavigationItem = R.id.navigation_followings
 
@@ -42,14 +53,11 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as MyApp).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
-
-    }
-
-    private fun createFile() {
 
     }
 
@@ -63,6 +71,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         preferences = getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
         setupToolbar()
         setupBottomNavigation()
+        val a = this.resources.getInteger(R.integer.stream_preview_height)
     }
 
     private fun setupToolbar() {
