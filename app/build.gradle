@@ -56,9 +56,9 @@ dependencies {
 
     //exoplayer
     def exoplayer = "2.17.1"
-    implementation "com.google.android.exoplayer:exoplayer-core:exoplayer"
-    implementation "com.google.android.exoplayer:exoplayer-hls:exoplayer"
-    implementation "com.google.android.exoplayer:exoplayer-ui:exoplayer"
+    implementation "com.google.android.exoplayer:exoplayer-core:${exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-hls:${exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-ui:${exoplayer}"
 
     def okhttp = "4.9.3"
     implementation "com.squareup.okhttp3:okhttp:${okhttp}"
