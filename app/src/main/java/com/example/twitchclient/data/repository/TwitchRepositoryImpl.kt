@@ -15,14 +15,13 @@ import javax.inject.Inject
 
 class TwitchRepositoryImpl @Inject constructor(
     private val twitchMapper: TwitchMapper,
-    private val context: Context
+    private val accessToken: String?
 ) : TwitchRepository {
 
     private val BASE_URL = "https://api.twitch.tv/helix/"
 
     private val AUTH_QUERY_PARAMETER = "Authorization"
     private val CLIENT_ID_QUERY_PARAMETER = "Client-Id"
-    private val accessToken = context.getSharedPreferences("USER_PREFERENCES", Context.MODE_PRIVATE).getString("USER_ACCESS_TOKEN_VALUE", "")
 
     private val authInterceptor = Interceptor { chain ->
         chain.run {

@@ -13,5 +13,11 @@ class AppModule(private val context: Context) {
     fun provideContext(): Context = context
 
     @Provides
+    fun provideAccessToken(
+        context: Context
+    ): String? =
+        context.getSharedPreferences("USER_PREFERENCES", Context.MODE_PRIVATE).getString("USER_ACCESS_TOKEN_VALUE", "")
+
+    @Provides
     fun provideTwitchMapper(): TwitchMapper = TwitchMapper()
 }
