@@ -9,7 +9,7 @@ import com.example.twitchclient.domain.entity.streams.StreamData
 
 class StreamHolder (
     private val binding: ItemStreamBinding,
-    private val action: (Int) -> Unit
+    private val action: (String) -> Unit
 ) : RecyclerView.ViewHolder(binding.root){
 
     fun bind(item: StreamData){
@@ -22,14 +22,14 @@ class StreamHolder (
             tvStreamCategory.text = item.game_name
         }
         itemView.setOnClickListener{
-            action(0)
+            action(item.user_login)
         }
     }
 
     companion object{
         fun create(
             parent: ViewGroup,
-            action: (Int) -> Unit
+            action: (String) -> Unit
         ) = StreamHolder(
             ItemStreamBinding.inflate(
                 LayoutInflater.from(parent.context),

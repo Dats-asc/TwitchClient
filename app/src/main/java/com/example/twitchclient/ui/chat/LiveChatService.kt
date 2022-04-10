@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import com.example.twitchclient.Constants
+import com.example.twitchclient.C
 import okhttp3.*
 
 class LiveChatService() : Service() {
@@ -37,7 +37,7 @@ class LiveChatService() : Service() {
         client = OkHttpClient()
         val request =
             Request.Builder()
-                .url(Constants.TWITCH_CHAT_WSS_SERVER)
+                .url(C.TWITCH_CHAT_WSS_SERVER)
                 .build()
         webSocket = client.newWebSocket(request, listener)
     }

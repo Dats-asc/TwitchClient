@@ -8,7 +8,7 @@ fun Fragment.navigator() : Navigator{
 
 interface Navigator {
 
-    fun pushFragment(fragment: Fragment)
+    fun pushFragment(fragment: Fragment, navOption: NavOption?)
 
     fun replaceFragment(fragment: Fragment)
 
@@ -16,4 +16,9 @@ interface Navigator {
 
     fun goBack()
 
+}
+
+public enum class NavOption{
+    OPTION_DEFAULT,
+    OPTION_HIDE_TOOLBAR_AND_BOTTOM_NAV_VIEW
 }

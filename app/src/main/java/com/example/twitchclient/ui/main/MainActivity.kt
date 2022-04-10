@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.twitchclient.MyApp
@@ -15,6 +16,7 @@ import com.example.twitchclient.databinding.ActivityMainBinding
 import com.example.twitchclient.ui.auth.AuthFragment
 import com.example.twitchclient.ui.followings.FollowingsFragment
 import com.example.twitchclient.ui.games.GamesFragment
+import com.example.twitchclient.ui.navigation.NavOption
 import com.example.twitchclient.ui.navigation.Navigator
 import com.example.twitchclient.ui.popular.PopularFragment
 import com.example.twitchclient.utils.ViewModelFactory
@@ -33,6 +35,8 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     private lateinit var preferences: SharedPreferences
 
+    private var navOption = NavOption.OPTION_DEFAULT
+
     @Inject
     lateinit var factory: ViewModelFactory
 
@@ -50,7 +54,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             savedInstanceState: Bundle?
         ) {
             super.onFragmentViewCreated(fm, f, v, savedInstanceState)
-            updateToolbar(f)
+            updateToolbar()
         }
     }
 
@@ -73,7 +77,6 @@ class MainActivity : AppCompatActivity(), Navigator {
         preferences = getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
         setupToolbar()
         setupBottomNavigation()
-        val a = this.resources.getInteger(R.integer.stream_preview_height)
     }
 
     private fun setupToolbar() {
@@ -83,7 +86,6 @@ class MainActivity : AppCompatActivity(), Navigator {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_search -> {
-                        backToStart()
                         true
                     }
 
@@ -92,11 +94,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             }
 
             setNavigationOnClickListener {
-                if (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) is AuthFragment) {
-                    onBackPressed()
-                    supportActionBar?.setDisplayHomeAsUpEnabled(false)
-                    supportActionBar?.setDisplayShowHomeEnabled(false)
-                }
+                goBack()
             }
         }
     }
@@ -106,6 +104,9 @@ class MainActivity : AppCompatActivity(), Navigator {
         supportFragmentManager.beginTransaction().run {
             add(R.id.nav_host_fragment_container, FollowingsFragment())
             commit()
+        }
+        supportFragmentManager.addOnBackStackChangedListener {
+            updateToolbar()
         }
 
         binding.bottomNavigationView.selectedItemId = R.id.navigation_followings
@@ -134,7 +135,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         }
     }
 
-    private fun updateToolbar(fragment: Fragment) {
+    private fun updateToolbar() {
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -143,14 +144,21 @@ class MainActivity : AppCompatActivity(), Navigator {
             supportActionBar?.setDisplayShowHomeEnabled(false)
         }
 
-        if (fragment is AuthFragment) {
-            binding.bottomNavigationView.visibility = View.GONE
-        } else {
-            binding.bottomNavigationView.visibility = View.VISIBLE
+
+        when(navOption){
+            NavOption.OPTION_HIDE_TOOLBAR_AND_BOTTOM_NAV_VIEW ->{
+                binding.bottomNavigationView.visibility = View.GONE
+                supportActionBar?.hide()
+            }
+            NavOption.OPTION_DEFAULT ->{
+                binding.bottomNavigationView.visibility = View.VISIBLE
+                supportActionBar?.show()
+            }
         }
     }
 
-    override fun pushFragment(fragment: Fragment) {
+    override fun pushFragment(fragment: Fragment, navOption: NavOption?) {
+        this.navOption = navOption ?: NavOption.OPTION_DEFAULT
         supportFragmentManager.beginTransaction().run {
             addToBackStack(null)
             replace(R.id.nav_host_fragment_container, fragment)
@@ -159,6 +167,8 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
     override fun backToStart() {
+        navOption = NavOption.OPTION_DEFAULT
+        updateToolbar()
         with(supportFragmentManager) {
             popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             beginTransaction().run {
@@ -170,6 +180,12 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     override fun goBack() {
         onBackPressed()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        navOption = NavOption.OPTION_DEFAULT
+        updateToolbar()
     }
 
     override fun replaceFragment(fragment: Fragment) {

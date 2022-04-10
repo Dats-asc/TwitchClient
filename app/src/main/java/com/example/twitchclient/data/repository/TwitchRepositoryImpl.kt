@@ -1,7 +1,6 @@
 package com.example.twitchclient.data.repository
 
-import android.content.Context
-import com.example.twitchclient.Constants
+import com.example.twitchclient.C
 import com.example.twitchclient.data.api.TwitchApi
 import com.example.twitchclient.data.api.mapper.TwitchMapper
 import com.example.twitchclient.domain.entity.streams.Streams
@@ -31,7 +30,7 @@ class TwitchRepositoryImpl @Inject constructor(
             proceed(
                 request().newBuilder()
                     .url(updatedRequestUrl)
-                    .addHeader(CLIENT_ID_QUERY_PARAMETER, Constants.CLIENT_ID)
+                    .addHeader(CLIENT_ID_QUERY_PARAMETER, C.CLIENT_ID)
                     .addHeader(AUTH_QUERY_PARAMETER, "Bearer $accessToken")
                     .build()
             )

@@ -31,7 +31,7 @@ class GamesFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         binding.startchat.setOnClickListener {
-            navigator().pushFragment(ChatFragment())
+            navigator().pushFragment(ChatFragment(), null)
         }
     }
 

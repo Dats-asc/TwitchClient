@@ -1,7 +1,7 @@
 package com.example.twitchclient.di.module
 
 import android.content.Context
-import com.example.twitchclient.Constants
+import com.example.twitchclient.C
 import com.example.twitchclient.data.api.TwitchApi
 import dagger.Module
 import dagger.Provides
@@ -32,7 +32,7 @@ class NetModule {
             proceed(
                 request().newBuilder()
                     .url(updatedRequestUrl)
-                    .addHeader(CLIENT_ID_QUERY_PARAMETER, Constants.CLIENT_ID)
+                    .addHeader(CLIENT_ID_QUERY_PARAMETER, C.CLIENT_ID)
                     .addHeader(
                         AUTH_QUERY_PARAMETER,
                         "Bearer ${

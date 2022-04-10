@@ -28,6 +28,10 @@ class ChatViewModel @Inject constructor(
 
     private var liveChatServiceBinder: LiveChatService.LocaleBinder? = null
 
+    private lateinit var broadcasterLogin: String
+
+    private lateinit var onChatLoaded: () -> Unit
+
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(
             name: ComponentName?,
@@ -62,17 +66,20 @@ class ChatViewModel @Inject constructor(
     private var _queryChatMessages: MutableLiveData<Result<ChatMessage>> = MutableLiveData()
     val queryChatMessages: LiveData<Result<ChatMessage>> = _queryChatMessages
 
-    fun startChat() {
+    fun startChat(broadcasterLogin: String, onChatLoaded: () -> Unit) {
+        this.broadcasterLogin = broadcasterLogin
+        this.onChatLoaded = onChatLoaded
         initUser()
         bindChatService()
     }
 
     private fun onWebSocketMessage(ws: WebSocket, msg: String) {
         if (messagesCount == 0) {
-            ws.send("JOIN #aimlul")
+            ws.send("JOIN #$broadcasterLogin")
             messagesCount++
         } else if (messagesCount == 1 || messagesCount == 2) {
             messagesCount++
+            onChatLoaded.invoke()
         } else {
             val username = msg.substringAfter(':').substringBefore('!')
             val message = msg.substringAfter(':').substringAfter(':')
@@ -82,12 +89,12 @@ class ChatViewModel @Inject constructor(
     }
 
     fun sendMessage(msg: String){
-        liveChatServiceBinder?.sendMessage(msg, "uebermarginal")
+        liveChatServiceBinder?.sendMessage(msg, broadcasterLogin)
     }
 
     private fun onWebSocketOpen(ws: WebSocket) {
         ws.send("PASS oauth:$accessToken")
-        ws.send("NICK guest005")
+        ws.send("NICK ${user.login}")
     }
 
     private fun bindChatService() {
