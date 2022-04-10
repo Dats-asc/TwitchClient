@@ -1,10 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.TwitchClient" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style name="Theme.TwitchClient" parent="Theme.AppCompat.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">#4d4d4d</item>
+        <item name="colorOnPrimary">#4d4d4d</item>
         <!-- Secondary brand color. -->
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">#666666</item>
+        <item name="colorOnSecondary">#666666</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:windowTranslucentStatus">true</item>

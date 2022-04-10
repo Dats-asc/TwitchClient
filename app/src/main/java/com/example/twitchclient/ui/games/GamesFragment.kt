@@ -11,7 +11,9 @@ import com.example.twitchclient.data.api.mapper.TwitchMapper
 import com.example.twitchclient.data.repository.TwitchRepositoryImpl
 import com.example.twitchclient.databinding.GamesFragmentBinding
 import com.example.twitchclient.domain.usecases.twitch.PingUserUseCase
+import com.example.twitchclient.ui.chat.ChatFragment
 import com.example.twitchclient.ui.main.MainActivity
+import com.example.twitchclient.ui.navigation.navigator
 import kotlinx.coroutines.launch
 
 class GamesFragment : Fragment() {
@@ -27,6 +29,10 @@ class GamesFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        binding.startchat.setOnClickListener {
+            navigator().pushFragment(ChatFragment())
+        }
     }
 
 }
