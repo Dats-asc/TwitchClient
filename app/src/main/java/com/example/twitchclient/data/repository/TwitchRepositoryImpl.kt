@@ -1,5 +1,6 @@
 package com.example.twitchclient.data.repository
 
+import android.content.Context
 import com.example.twitchclient.Constants
 import com.example.twitchclient.data.api.TwitchApi
 import com.example.twitchclient.data.api.mapper.TwitchMapper
@@ -13,14 +14,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 class TwitchRepositoryImpl @Inject constructor(
-    private val twitchMapper: TwitchMapper
+    private val twitchMapper: TwitchMapper,
+    private val accessToken: String?
 ) : TwitchRepository {
 
     private val BASE_URL = "https://api.twitch.tv/helix/"
 
     private val AUTH_QUERY_PARAMETER = "Authorization"
     private val CLIENT_ID_QUERY_PARAMETER = "Client-Id"
-    private val USER_ACCESS_TOKEN = "gsnsg8g0qjhr6d4wvniiu0dfvrxxqv"
 
     private val authInterceptor = Interceptor { chain ->
         chain.run {
@@ -31,7 +32,7 @@ class TwitchRepositoryImpl @Inject constructor(
                 request().newBuilder()
                     .url(updatedRequestUrl)
                     .addHeader(CLIENT_ID_QUERY_PARAMETER, Constants.CLIENT_ID)
-                    .addHeader(AUTH_QUERY_PARAMETER, "Bearer $USER_ACCESS_TOKEN")
+                    .addHeader(AUTH_QUERY_PARAMETER, "Bearer $accessToken")
                     .build()
             )
         }
