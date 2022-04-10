@@ -20,6 +20,8 @@ import com.example.twitchclient.ui.popular.PopularFragment
 import com.example.twitchclient.utils.ViewModelFactory
 import javax.inject.Inject
 
+val USER_PREFERENCES = "USER_PREFERENCES"
+
 class MainActivity : AppCompatActivity(), Navigator {
 
     companion object {
@@ -58,7 +60,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
-
+        putAccessToken("tthzw65o8p57eb80y0jwkr6lfcg3rt")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
