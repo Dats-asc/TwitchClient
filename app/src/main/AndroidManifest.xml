@@ -32,6 +32,13 @@
                 <data android:scheme="oauth-testing" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".ui.chat.LiveChatService"
+            android:exported="false"
+            >
+
+        </service>
     </application>
 
 </manifest>
