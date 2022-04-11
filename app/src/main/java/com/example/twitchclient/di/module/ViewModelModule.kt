@@ -6,10 +6,12 @@ import com.example.twitchclient.di.ViewModelKey
 import com.example.twitchclient.ui.chat.ChatViewModel
 import com.example.twitchclient.ui.followings.FollowingsViewModel
 import com.example.twitchclient.ui.main.MainViewModel
+import com.example.twitchclient.ui.stream.StreamViewModel
 import com.example.twitchclient.utils.ViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import java.util.stream.Stream
 
 @Module
 interface ViewModelModule {
@@ -38,5 +40,12 @@ interface ViewModelModule {
     @ViewModelKey(ChatViewModel::class)
     fun bindChatViewModel(
         viewModel: ChatViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StreamViewModel::class)
+    fun bindStreamViewModel(
+        viewModel: StreamViewModel
     ): ViewModel
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/onSecondary"
-    android:padding="8dp"
+    android:paddingHorizontal="8dp"
     tools:context=".ui.chat.ChatFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
