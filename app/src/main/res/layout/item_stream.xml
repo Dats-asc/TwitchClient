@@ -22,7 +22,7 @@
         android:layout_height="24dp"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@id/iv_stream_preview"
-        app:layout_constraintTop_toTopOf="@id/iv_stream_preview"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/tv_channel_name"
