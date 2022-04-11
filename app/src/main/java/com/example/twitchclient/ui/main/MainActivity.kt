@@ -160,6 +160,12 @@ class MainActivity : AppCompatActivity(), Navigator {
     override fun pushFragment(fragment: Fragment, navOption: NavOption?) {
         this.navOption = navOption ?: NavOption.OPTION_DEFAULT
         supportFragmentManager.beginTransaction().run {
+            setCustomAnimations(
+                R.anim.enter_from_right,
+                R.anim.exit_to_left,
+                R.anim.enter_from_left,
+                R.anim.exit_to_right
+            )
             addToBackStack(null)
             replace(R.id.nav_host_fragment_container, fragment)
             commit()

@@ -29,10 +29,6 @@ class GamesFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        binding.startchat.setOnClickListener {
-            navigator().pushFragment(ChatFragment(), null)
-        }
     }
 
 }
