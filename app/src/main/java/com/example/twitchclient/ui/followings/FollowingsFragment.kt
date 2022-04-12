@@ -41,7 +41,7 @@ class FollowingsFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.queryStreams.observe(activity as MainActivity) {
+        viewModel.queryStreams.observe(requireActivity()) {
             it.fold(
                 onSuccess = { streams ->
                     streamAdapter = StreamAdapter(streams.data) { broadcasterLogin ->
@@ -50,6 +50,7 @@ class FollowingsFragment : Fragment() {
                         },
                             NavOption.OPTION_HIDE_TOOLBAR_AND_BOTTOM_NAV_VIEW
                         )
+
                     }
                     binding.rvStreams.adapter = streamAdapter
                 }, onFailure = {

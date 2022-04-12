@@ -14,6 +14,8 @@ import com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistParse
 import com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistTracker
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.*
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 
 class PlayerService : Service() {
 
@@ -27,13 +29,15 @@ class PlayerService : Service() {
 
     private lateinit var onPlayerCreated: (ExoPlayer) -> Unit
 
+    private var lastQualityOption = 0
+
     inner class LocaleBinder : Binder() {
 
         fun getPlayer(): ExoPlayer {
             return this@PlayerService.player
         }
 
-        fun isPlaying() = this@PlayerService.player.isPlaying
+        val isPlaying: Boolean get() = this@PlayerService.player.isPlaying
 
         fun startPlayer(broadcasterLogin: String, onPlayerCreated: (ExoPlayer) -> Unit) {
             this@PlayerService.startPlayer(broadcasterLogin, onPlayerCreated)
@@ -73,6 +77,7 @@ class PlayerService : Service() {
             clearMediaItems()
             setMediaSource(mediaSource)
             prepare()
+            changeVideoQuality(lastQualityOption)
         }
     }
 
@@ -83,6 +88,7 @@ class PlayerService : Service() {
     }
 
     private fun changeVideoQuality(qualityOption: Int) {
+        lastQualityOption = qualityOption
         trackSelector.currentMappedTrackInfo?.let {
             if (qualityOption != 0) {
                 trackSelector.parameters = trackSelector.buildUponParameters()
@@ -118,14 +124,18 @@ class PlayerService : Service() {
         player = ExoPlayer.Builder(this)
             .setTrackSelector(trackSelector)
             .build()
+            .also {
+                onPlayerCreated.invoke(it)
+            }
         createMediaSource()
         player.setMediaSource(mediaSource)
         player.prepare()
         player.playWhenReady = true
-        onPlayerCreated.invoke(player)
     }
 
     private fun createMediaSource() {
+        player.seekTo(0)
+
         val httpDataSourceFactory =
             DefaultHttpDataSource.Factory().setAllowCrossProtocolRedirects(true)
                 .setDefaultRequestProperties(mapOf("X-Donate-To" to "https://ttv.lol/donate"))
@@ -137,9 +147,6 @@ class PlayerService : Service() {
 
         mediaSource = HlsMediaSource.Factory(dataSourceFactory)
             .setAllowChunklessPreparation(true)
-            .setPlaylistParserFactory(DefaultHlsPlaylistParserFactory())
-            .setPlaylistTrackerFactory(DefaultHlsPlaylistTracker.FACTORY)
-            .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(6))
             .createMediaSource(
                 MediaItem.Builder()
                     .setUri(Uri.parse("https://api.ttv.lol/playlist/$broadcasterLogin.m3u8%3Fallow_source=true&allow_audio_only=true&type=any&p=211724&fast_bread=true&player_backend=mediaplayer&supported_codecs=avc1&player_version=1.4.0&warp=true"))

@@ -24,6 +24,8 @@ class StreamViewModel @Inject constructor(
 
     private lateinit var broadcasterLogin: String
 
+    private var lastQualityOption = 0
+
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(
             name: ComponentName?,
@@ -38,7 +40,7 @@ class StreamViewModel @Inject constructor(
         }
     }
 
-    fun start(onServiceBind: () -> String, onPlayerCreated: (ExoPlayer) -> Unit){
+    fun start(onServiceBind: () -> String, onPlayerCreated: (ExoPlayer) -> Unit) {
         this.onServiceBind = onServiceBind
         this.onPlayerCreated = onPlayerCreated
         bindService()
@@ -46,15 +48,20 @@ class StreamViewModel @Inject constructor(
 
     fun restart() = streamPlayerServiceBinder?.restart()
 
-    fun play() = streamPlayerServiceBinder?.play()
+    fun isPlaying() = streamPlayerServiceBinder?.isPlaying ?: false
 
     fun stop() = streamPlayerServiceBinder?.stop()
+
+    fun pause() = streamPlayerServiceBinder?.pause()
+
+    fun play() = streamPlayerServiceBinder?.play()
 
     fun getQualityOptionsList() = streamPlayerServiceBinder?.getMappedQualityList()
 
     fun setQualityOption(option: Int) = streamPlayerServiceBinder?.changeQuality(option)
 
-    private fun bindService(){
+    private fun bindService() {
+        //TODO разобарться с потоками или контекстом
         context.bindService(
             Intent(context, PlayerService::class.java),
             connection,
