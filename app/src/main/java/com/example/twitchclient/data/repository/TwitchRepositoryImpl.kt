@@ -3,6 +3,8 @@ package com.example.twitchclient.data.repository
 import com.example.twitchclient.C
 import com.example.twitchclient.data.api.TwitchApi
 import com.example.twitchclient.data.api.mapper.TwitchMapper
+import com.example.twitchclient.data.responses.twitch.emotes.TwitchGlobalEmotesResponse
+import com.example.twitchclient.domain.entity.emotes.TwitchGlobalEmotes
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.domain.entity.user.User
 import com.example.twitchclient.domain.repository.TwitchRepository
@@ -66,6 +68,10 @@ class TwitchRepositoryImpl @Inject constructor(
 
     override suspend fun getFollowedStreams(userId: String): Streams {
         return twitchMapper.mapStreamResponse(api.getFollowedStreams(userId))
+    }
+
+    override suspend fun getTwitchGlobalEmotes() : TwitchGlobalEmotes {
+        return twitchMapper.mapTwitchGlobalEmotesResponse(api.getTwitchGlobalEmotes())
     }
 
 }

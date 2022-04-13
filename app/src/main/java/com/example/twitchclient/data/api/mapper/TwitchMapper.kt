@@ -1,13 +1,13 @@
 package com.example.twitchclient.data.api.mapper
 
-import com.example.twitchclient.R
+import com.example.twitchclient.data.responses.twitch.emotes.TwitchGlobalEmotesResponse
 import com.example.twitchclient.data.responses.twitch.stream.StreamData
 import com.example.twitchclient.data.responses.twitch.stream.StreamsResponse
 import com.example.twitchclient.data.responses.twitch.user.UserResponse
+import com.example.twitchclient.domain.entity.emotes.Emote
+import com.example.twitchclient.domain.entity.emotes.TwitchGlobalEmotes
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.domain.entity.user.User
-import java.lang.Integer.getInteger
-import java.security.AccessController.getContext
 
 class TwitchMapper {
 
@@ -34,6 +34,27 @@ class TwitchMapper {
         return Streams(data = streamList)
     }
 
+    fun mapTwitchGlobalEmotesResponse(response: TwitchGlobalEmotesResponse): TwitchGlobalEmotes {
+        val mappedEmoteList = mutableListOf<Emote>()
+        response.data.forEach { emoteData ->
+            mappedEmoteList.add(
+                Emote(
+                    id = emoteData.id,
+                    format = emoteData.format,
+                    images = emoteData.images,
+                    name = emoteData.name,
+                    scale = emoteData.scale,
+                    theme_mode = emoteData.theme_mode
+                )
+            )
+        }
+
+        return TwitchGlobalEmotes(
+            emotes = mappedEmoteList,
+            template = response.template
+        )
+    }
+
     private fun mapStreamData(streamData: StreamData) =
         com.example.twitchclient.domain.entity.streams.StreamData(
             id = streamData.id,
@@ -47,7 +68,7 @@ class TwitchMapper {
             viewer_count = streamData.viewer_count,
             started_at = streamData.started_at,
             language = streamData.language,
-            thumbnail_url = with(streamData.thumbnail_url){
+            thumbnail_url = with(streamData.thumbnail_url) {
                 this.replace("{width}", "640")
                     .replace("{height}", "360")
             }
