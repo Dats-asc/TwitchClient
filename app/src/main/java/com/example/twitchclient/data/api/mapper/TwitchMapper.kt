@@ -4,8 +4,8 @@ import com.example.twitchclient.data.responses.twitch.emotes.TwitchGlobalEmotesR
 import com.example.twitchclient.data.responses.twitch.stream.StreamData
 import com.example.twitchclient.data.responses.twitch.stream.StreamsResponse
 import com.example.twitchclient.data.responses.twitch.user.UserResponse
-import com.example.twitchclient.domain.entity.emotes.Emote
-import com.example.twitchclient.domain.entity.emotes.TwitchGlobalEmotes
+import com.example.twitchclient.domain.entity.emotes.twitch.Emote
+import com.example.twitchclient.domain.entity.emotes.twitch.TwitchGlobalEmotes
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.domain.entity.user.User
 

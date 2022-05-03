@@ -1,6 +1,6 @@
 package com.example.twitchclient.domain.entity.streams
 
-class StreamData(
+data class StreamData(
     val id: String,
     val user_id: String,
     val user_login: String,

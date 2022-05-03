@@ -13,7 +13,7 @@ class LiveChatService() : Service() {
 
     private lateinit var webSocket: WebSocket
 
-    private val DEFAULT_CLOSE_CODE = 0
+    private val DEFAULT_CLOSE_CODE = 1000
 
     inner class LocaleBinder : Binder() {
 
@@ -23,7 +23,7 @@ class LiveChatService() : Service() {
             this@LiveChatService.start(listener)
         }
 
-        fun sendMessage(msg: String, channelName: String){
+        fun sendMessage(msg: String, channelName: String) {
             this@LiveChatService.sendMessage(msg, channelName)
         }
 
@@ -42,11 +42,11 @@ class LiveChatService() : Service() {
         webSocket = client.newWebSocket(request, listener)
     }
 
-    private fun sendMessage(msg: String, channelName: String){
+    private fun sendMessage(msg: String, channelName: String) {
         webSocket.send("PRIVMSG #$channelName :$msg")
     }
 
-    private fun stop(){
+    private fun stop() {
         webSocket.close(DEFAULT_CLOSE_CODE, "")
         this.stopSelf()
     }

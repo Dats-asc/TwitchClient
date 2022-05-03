@@ -6,7 +6,7 @@ import com.example.twitchclient.domain.entity.streams.StreamData
 
 class StreamAdapter (
     private val cities: List<StreamData>,
-    private val action: (String) -> Unit
+    private val action: (StreamData) -> Unit
 ) : RecyclerView.Adapter<StreamHolder>() {
 
     override fun onCreateViewHolder(

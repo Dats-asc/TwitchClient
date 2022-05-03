@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), Navigator {
     @Inject
     lateinit var factory: ViewModelFactory
 
-    private val viewModel: MainViewModel by viewModels{
+    private val viewModel: MainViewModel by viewModels {
         factory
     }
 
@@ -145,12 +145,12 @@ class MainActivity : AppCompatActivity(), Navigator {
         }
 
 
-        when(navOption){
-            NavOption.OPTION_HIDE_TOOLBAR_AND_BOTTOM_NAV_VIEW ->{
+        when (navOption) {
+            NavOption.OPTION_HIDE_TOOLBAR_AND_BOTTOM_NAV_VIEW -> {
                 binding.bottomNavigationView.visibility = View.GONE
                 supportActionBar?.hide()
             }
-            NavOption.OPTION_DEFAULT ->{
+            NavOption.OPTION_DEFAULT -> {
                 binding.bottomNavigationView.visibility = View.VISIBLE
                 supportActionBar?.show()
             }
@@ -161,10 +161,10 @@ class MainActivity : AppCompatActivity(), Navigator {
         this.navOption = navOption ?: NavOption.OPTION_DEFAULT
         supportFragmentManager.beginTransaction().run {
             setCustomAnimations(
-                R.anim.enter_from_right,
-                R.anim.exit_to_left,
-                R.anim.enter_from_left,
-                R.anim.exit_to_right
+                R.anim.test1,
+                R.anim.test2,
+                R.anim.test1,
+                R.anim.test2
             )
             addToBackStack(null)
             replace(R.id.nav_host_fragment_container, fragment)
