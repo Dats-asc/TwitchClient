@@ -36,7 +36,6 @@ class StreamFragment : Fragment() {
 
     private lateinit var player: ExoPlayer
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

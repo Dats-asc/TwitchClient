@@ -5,5 +5,5 @@
     <translate
         android:fromXDelta="0%" android:toXDelta="100%p"
         android:fromYDelta="0%" android:toYDelta="0%"
-        android:duration="@integer/material_motion_duration_long_1" />
+        android:duration="@integer/material_motion_duration_short_2" />
 </set>

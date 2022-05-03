@@ -15,7 +15,6 @@ import javax.inject.Named
 private val BASE_URL = "https://api.twitch.tv/helix/"
 private val AUTH_QUERY_PARAMETER = "Authorization"
 private val CLIENT_ID_QUERY_PARAMETER = "Client-Id"
-private val USER_ACCESS_TOKEN = "gsnsg8g0qjhr6d4wvniiu0dfvrxxqv"
 
 @Module
 class NetModule {

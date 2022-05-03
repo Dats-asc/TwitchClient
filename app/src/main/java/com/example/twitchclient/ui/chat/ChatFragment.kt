@@ -1,29 +1,23 @@
 package com.example.twitchclient.ui.chat
 
-import android.content.ComponentName
-import android.content.Intent
-import android.content.ServiceConnection
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.os.IBinder
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
 import com.example.twitchclient.C
-import com.example.twitchclient.R
 import com.example.twitchclient.databinding.ChatFragmentBinding
-import com.example.twitchclient.databinding.FollowingsFragmentBinding
 import com.example.twitchclient.domain.entity.chat.ChatMessage
-import com.example.twitchclient.ui.followings.FollowingsViewModel
+import com.example.twitchclient.domain.entity.emotes.ChatEmotes
+import com.example.twitchclient.domain.entity.emotes.bttv.BttvChanelEmotes
+import com.example.twitchclient.domain.entity.emotes.bttv.BttvFfzEmote
+import com.example.twitchclient.domain.entity.emotes.ffz.FfzChannelEmotes
+import com.example.twitchclient.domain.entity.emotes.twitch.Emote
+import com.example.twitchclient.domain.entity.emotes.twitch.TwitchGlobalEmotes
 import com.example.twitchclient.ui.main.MainActivity
 import com.google.android.material.snackbar.Snackbar
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
 
 class ChatFragment : Fragment() {
 
@@ -33,9 +27,11 @@ class ChatFragment : Fragment() {
 
     private var chatMessages = mutableListOf<ChatMessage>()
 
-    private var isScrollStoped = false
+    private var isScrollStopped = false
 
     private lateinit var broadcasterLogin: String
+
+    private lateinit var chatEmotes: ChatEmotes
 
     private val viewModel: ChatViewModel by viewModels {
         (activity as MainActivity).factory
@@ -54,16 +50,18 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initAdapter()
         viewModel.startChat(broadcasterLogin) {
             onChatLoaded()
         }
         initObservers()
-
-        binding.btnSend.setOnClickListener {
-            viewModel.sendMessage(binding.tiSendMessage.text.toString())
-            val a = 0
+        binding.btnSendMessage.setOnClickListener {
+            viewModel.sendMessage(binding.tiMessage.text.toString())
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopChat()
     }
 
     private fun onChatLoaded() {
@@ -75,25 +73,48 @@ class ChatFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.queryChatMessages.observe(activity as MainActivity) {
+        viewModel.queryChatMessages.observe(requireActivity()) {
             it.fold(
                 onSuccess = { chatMessage ->
-                    chatMessages.add(chatMessage)
-                    chatAdapter.notifyItemInserted(chatAdapter.itemCount)
-                    if (!isScrollStoped) {
-                        binding.rvLiveChat.scrollToPosition(chatAdapter.itemCount - 1)
-                    }
+                    onChatMessage(chatMessage)
+                },
+                onFailure = { Log.e("On chat message", it.message.toString()) }
+            )
+        }
+        viewModel.chatEmotes.observe(requireActivity()) {
+            it.fold(
+                onSuccess = { chatEmotes ->
+                    onChatDataLoaded(chatEmotes)
                 },
                 onFailure = {
-
+                    Log.e("Get emote fail", it.message.toString())
                 }
             )
         }
     }
 
-    private fun initAdapter() {
-        chatAdapter = ChatAdapter(chatMessages, {})
+    private fun onChatDataLoaded(chatEmotes: ChatEmotes) {
+        this.chatEmotes = chatEmotes
+        initAdapter(chatEmotes)
+    }
+
+    private fun onChatMessage(chatMessage: ChatMessage) {
+        chatMessages.add(chatMessage)
+        chatAdapter.notifyItemInserted(chatAdapter.itemCount - 1)
+        if (!isScrollStopped) {
+            binding.rvLiveChat.scrollToPosition(chatAdapter.itemCount - 1)
+        }
+    }
+
+    private fun initAdapter(chatEmotes: ChatEmotes) {
+        chatAdapter = ChatAdapter(
+            this,
+            chatMessages,
+            chatEmotes,
+            {}
+        )
         binding.rvLiveChat.adapter = chatAdapter
+        binding.rvLiveChat.itemAnimator = null
     }
 
 }

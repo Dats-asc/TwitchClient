@@ -1,6 +1,7 @@
 package com.example.twitchclient.ui.followings
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,10 +45,11 @@ class FollowingsFragment : Fragment() {
         viewModel.queryStreams.observe(requireActivity()) {
             it.fold(
                 onSuccess = { streams ->
-                    streamAdapter = StreamAdapter(streams.data) { broadcasterLogin ->
-                        navigator().pushFragment(StreamFragment().apply {
-                            arguments = bundleOf(C.BROADCASTER_LOGIN to broadcasterLogin)
-                        },
+                    streamAdapter = StreamAdapter(streams.data) { streamData ->
+                        navigator().pushFragment(
+                            StreamFragment().apply {
+                                arguments = bundleOf(C.BROADCASTER_LOGIN to streamData.user_login)
+                            },
                             NavOption.OPTION_HIDE_TOOLBAR_AND_BOTTOM_NAV_VIEW
                         )
 
@@ -55,6 +57,7 @@ class FollowingsFragment : Fragment() {
                     binding.rvStreams.adapter = streamAdapter
                 }, onFailure = {
                     Snackbar.make(binding.root, "Something go wrong", Snackbar.LENGTH_LONG).show()
+                    Log.e("", it.message.toString())
                 }
             )
         }

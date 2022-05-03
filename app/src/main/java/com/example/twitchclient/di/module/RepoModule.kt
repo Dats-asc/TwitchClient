@@ -1,6 +1,8 @@
 package com.example.twitchclient.di.module
 
+import com.example.twitchclient.data.repository.BttvFfzRepositoryImpl
 import com.example.twitchclient.data.repository.TwitchRepositoryImpl
+import com.example.twitchclient.domain.repository.BttvFfzRepository
 import com.example.twitchclient.domain.repository.TwitchRepository
 import dagger.Binds
 import dagger.Module
@@ -11,5 +13,10 @@ interface RepoModule {
     @Binds
     fun twitchRepository(
         impl: TwitchRepositoryImpl
-    ) : TwitchRepository
+    ): TwitchRepository
+
+    @Binds
+    fun bttvFfzRepository(
+        impl: BttvFfzRepositoryImpl
+    ): BttvFfzRepository
 }
