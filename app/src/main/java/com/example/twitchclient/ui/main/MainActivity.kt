@@ -1,30 +1,29 @@
 package com.example.twitchclient.ui.main
 
+import android.app.SearchManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.example.twitchclient.MyApp
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.ActivityMainBinding
-import com.example.twitchclient.ui.auth.AuthFragment
 import com.example.twitchclient.ui.followings.FollowingsFragment
 import com.example.twitchclient.ui.games.GamesFragment
 import com.example.twitchclient.ui.navigation.NavOption
 import com.example.twitchclient.ui.navigation.Navigator
 import com.example.twitchclient.ui.popular.PopularFragment
-import com.example.twitchclient.utils.ViewModelFactory
+import com.example.twitchclient.ui.search.SearchFragment
+import com.example.twitchclient.utils.MyViewModelFactory
+import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-val USER_PREFERENCES = "USER_PREFERENCES"
-
-class MainActivity : AppCompatActivity(), Navigator {
+class MainActivity : DaggerAppCompatActivity(), Navigator {
 
     companion object {
         private const val USER_PREFERENCES = "USER_PREFERENCES"
@@ -38,11 +37,9 @@ class MainActivity : AppCompatActivity(), Navigator {
     private var navOption = NavOption.OPTION_DEFAULT
 
     @Inject
-    lateinit var factory: ViewModelFactory
+    lateinit var factory: MyViewModelFactory
 
-    private val viewModel: MainViewModel by viewModels {
-        factory
-    }
+    private val viewModel: MainViewModel by viewModels { factory }
 
     private var currentNavigationItem = R.id.navigation_followings
 
@@ -59,7 +56,6 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as MyApp).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -69,6 +65,14 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
+
+        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchItem?.actionView = SearchView(this)
+        val searchView: SearchView = searchItem?.actionView as SearchView
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -86,6 +90,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_search -> {
+                        pushFragment(SearchFragment(), NavOption.OPTION_DEFAULT)
                         true
                     }
 
@@ -207,5 +212,5 @@ class MainActivity : AppCompatActivity(), Navigator {
             .apply()
     }
 
-    fun getAccessToken(): String? = preferences.getString(USER_ACCESS_TOKEN_VALUE, "")
+    fun getAccessToken(): String? = preferences.getString(USER_ACCESS_TOKEN_VALUE, null)
 }

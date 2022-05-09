@@ -31,5 +31,4 @@ class FollowingsViewModel @Inject constructor(
             }
         }
     }
-
 }

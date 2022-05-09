@@ -42,6 +42,7 @@ class FollowingsFragment : Fragment() {
             initAdapter(it)
         } ?: kotlin.run {
             initObservers()
+            binding.progressbar.visibility = View.VISIBLE
             viewModel.getFollowedStreams()
         }
     }
@@ -52,6 +53,7 @@ class FollowingsFragment : Fragment() {
                 onSuccess = { streams ->
                     initAdapter(streams)
                     viewModel.savedData = streams
+                    binding.progressbar.visibility = View.GONE
                 }, onFailure = {
                     Snackbar.make(binding.root, "Something go wrong", Snackbar.LENGTH_LONG).show()
                     Log.e("", it.message.toString())

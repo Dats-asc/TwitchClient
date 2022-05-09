@@ -28,7 +28,7 @@ class ChatViewModel @Inject constructor(
     private val pingUserUseCase: PingUserUseCase,
     private val getTwitchGlobalEmotesUseCase: GetTwitchGlobalEmotesUseCase,
     private val getBttvChannelEmotesUseCase: GetBttvChannelEmotesUseCase,
-    private val getFfzChannelEmotesUseCase: GetFfzChannelEmotesUseCase
+    private val getFfzChannelEmotesUseCase: GetFfzChannelEmotesUseCase,
 ) : ViewModel() {
 
     private var liveChatServiceBinder: LiveChatService.LocaleBinder? = null

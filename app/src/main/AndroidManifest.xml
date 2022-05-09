@@ -21,11 +21,11 @@
         <service
             android:name=".ui.stream.PlayerService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <service
             android:name=".ui.chat.LiveChatService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity
             android:name=".ui.main.MainActivity"

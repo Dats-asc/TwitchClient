@@ -45,24 +45,32 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"
 
+    // region Dagger
     def dagger = "2.41"
     implementation "com.google.dagger:dagger:${dagger}"
+    implementation "com.google.dagger:dagger-android-support:${dagger}"
+    kapt "com.google.dagger:dagger-android-processor:${dagger}"
     kapt "com.google.dagger:dagger-compiler:${dagger}"
+    // endregion
 
-    // region Network
+    // region Retrofit
     def retrofit = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:${retrofit}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofit}"
+    // endregion
 
-    //exoplayer
+    // region Exoplayer
     def exoplayer = "2.17.1"
     implementation "com.google.android.exoplayer:exoplayer-core:${exoplayer}"
     implementation "com.google.android.exoplayer:exoplayer-hls:${exoplayer}"
     implementation "com.google.android.exoplayer:exoplayer-ui:${exoplayer}"
+    // endregion
 
+    // region Retrofit
     def okhttp = "4.9.3"
     implementation "com.squareup.okhttp3:okhttp:${okhttp}"
     debugImplementation "com.squareup.okhttp3:logging-interceptor:${okhttp}"
+    // endregion
 
     implementation 'com.github.bumptech.glide:glide:4.13.1'
 

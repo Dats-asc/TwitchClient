@@ -61,7 +61,6 @@ class StreamViewModel @Inject constructor(
     fun setQualityOption(option: Int) = streamPlayerServiceBinder?.changeQuality(option)
 
     private fun bindService() {
-        //TODO разобарться с потоками или контекстом
         context.bindService(
             Intent(context, PlayerService::class.java),
             connection,
