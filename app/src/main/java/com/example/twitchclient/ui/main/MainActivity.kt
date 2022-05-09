@@ -90,7 +90,7 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_search -> {
-                        pushFragment(SearchFragment(), NavOption.OPTION_DEFAULT)
+                        openSearchFragment()
                         true
                     }
 
@@ -105,7 +105,7 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
     }
 
     private fun setupBottomNavigation() {
-        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener,   false)
         supportFragmentManager.beginTransaction().run {
             add(R.id.nav_host_fragment_container, FollowingsFragment())
             commit()
@@ -159,6 +159,15 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
                 binding.bottomNavigationView.visibility = View.VISIBLE
                 supportActionBar?.show()
             }
+        }
+    }
+
+    private fun openSearchFragment(){
+        this.navOption = NavOption.OPTION_DEFAULT
+        supportFragmentManager.beginTransaction().run {
+            addToBackStack(null)
+            replace(R.id.nav_host_fragment_container, SearchFragment())
+            commit()
         }
     }
 
