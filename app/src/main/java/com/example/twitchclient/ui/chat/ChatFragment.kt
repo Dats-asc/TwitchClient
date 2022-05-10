@@ -11,11 +11,6 @@ import com.example.twitchclient.C
 import com.example.twitchclient.databinding.ChatFragmentBinding
 import com.example.twitchclient.domain.entity.chat.ChatMessage
 import com.example.twitchclient.domain.entity.emotes.ChatEmotes
-import com.example.twitchclient.domain.entity.emotes.bttv.BttvChanelEmotes
-import com.example.twitchclient.domain.entity.emotes.bttv.BttvFfzEmote
-import com.example.twitchclient.domain.entity.emotes.ffz.FfzChannelEmotes
-import com.example.twitchclient.domain.entity.emotes.twitch.Emote
-import com.example.twitchclient.domain.entity.emotes.twitch.TwitchGlobalEmotes
 import com.example.twitchclient.ui.main.MainActivity
 import com.google.android.material.snackbar.Snackbar
 

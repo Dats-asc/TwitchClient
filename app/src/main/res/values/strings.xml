@@ -6,5 +6,7 @@
     <string name="title_popular">Популярное</string>
     <string name="title_followings">Подписки</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

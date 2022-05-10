@@ -1,22 +1,34 @@
 package com.example.twitchclient.di
 
-import com.example.twitchclient.di.module.AppModule
-import com.example.twitchclient.di.module.NetModule
-import com.example.twitchclient.di.module.RepoModule
-import com.example.twitchclient.di.module.ViewModelModule
-import com.example.twitchclient.ui.main.MainActivity
+import com.example.twitchclient.MyApp
+import com.example.twitchclient.di.module.*
+import dagger.BindsInstance
 import dagger.Component
+import dagger.android.support.AndroidSupportInjectionModule
+import javax.inject.Singleton
 
-
+@Singleton
 @Component(
     modules = [
+        AndroidSupportInjectionModule::class,
         AppModule::class,
         NetModule::class,
         RepoModule::class,
-        ViewModelModule::class
+        ViewModelModule::class,
+        ActivityBindsModule::class,
+        FragmentBindsModule::class
     ]
 )
 interface AppComponent {
 
-    fun inject(mainActivity: MainActivity)
+    @Component.Builder
+    interface Builder {
+
+        @BindsInstance
+        fun context(application: MyApp): Builder
+
+        fun build(): AppComponent
+    }
+
+    fun inject(application: MyApp)
 }

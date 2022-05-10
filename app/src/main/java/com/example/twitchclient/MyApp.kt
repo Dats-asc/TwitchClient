@@ -1,21 +1,25 @@
 package com.example.twitchclient
 
 import android.app.Application
-import com.example.twitchclient.di.AppComponent
 import com.example.twitchclient.di.DaggerAppComponent
-import com.example.twitchclient.di.module.AppModule
-import com.example.twitchclient.di.module.NetModule
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import javax.inject.Inject
 
-class MyApp : Application() {
+class MyApp : Application(), HasAndroidInjector {
 
-    lateinit var appComponent: AppComponent
+    @Inject
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent
-            .builder()
-            .appModule(AppModule(applicationContext))
-            .netModule(NetModule())
+        DaggerAppComponent.builder()
+            .context(this)
             .build()
+            .inject(this)
+
     }
+
+    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 }

@@ -1,6 +1,8 @@
 package com.example.twitchclient.di.module
 
 import android.content.Context
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.example.twitchclient.C
 import com.example.twitchclient.data.api.TwitchApi
 import dagger.Module
@@ -10,6 +12,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
+import javax.inject.Singleton
 
 
 private val BASE_URL = "https://api.twitch.tv/helix/"
@@ -20,6 +23,7 @@ private val CLIENT_ID_QUERY_PARAMETER = "Client-Id"
 class NetModule {
 
     @Provides
+    @Singleton
     @Named("authInterceptor")
     fun authInterceptor(
         applicationContext: Context
@@ -47,6 +51,11 @@ class NetModule {
     }
 
     @Provides
+    @Singleton
+    fun glide(context: Context): RequestManager = Glide.with(context)
+
+    @Provides
+    @Singleton
     fun okhttp(
         @Named("authInterceptor") authInterceptor: Interceptor
     ): OkHttpClient =
@@ -55,9 +64,11 @@ class NetModule {
             .build()
 
     @Provides
+    @Singleton
     fun provideGsonConverter(): GsonConverterFactory = GsonConverterFactory.create()
 
     @Provides
+    @Singleton
     fun api(
         okHttpClient: OkHttpClient,
         provideGsonConverter: GsonConverterFactory

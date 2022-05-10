@@ -5,28 +5,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.twitchclient.di.ViewModelKey
 import com.example.twitchclient.ui.chat.ChatViewModel
 import com.example.twitchclient.ui.followings.FollowingsViewModel
-import com.example.twitchclient.ui.main.MainViewModel
 import com.example.twitchclient.ui.stream.StreamViewModel
-import com.example.twitchclient.utils.ViewModelFactory
+import com.example.twitchclient.utils.MyViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import java.util.stream.Stream
 
 @Module
 interface ViewModelModule {
 
     @Binds
     fun bindViewModelFactory(
-        factory: ViewModelFactory
+        factoryMy: MyViewModelFactory
     ): ViewModelProvider.Factory
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    fun bindMainViewModel(
-        viewModel: MainViewModel
-    ): ViewModel
 
     @Binds
     @IntoMap

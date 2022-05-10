@@ -15,6 +15,7 @@
         <entry key="app/src/main/res/layout/custom_exo_playback_control_view.xml" value="0.27314814814814814" />
         <entry key="app/src/main/res/layout/followings_fragment.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/fragment_auth.xml" value="0.2953125" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/games_fragment.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/item_chat_message.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/item_stream.xml" value="0.2953125" />
