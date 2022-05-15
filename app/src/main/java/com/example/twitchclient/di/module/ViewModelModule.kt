@@ -5,6 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.twitchclient.di.ViewModelKey
 import com.example.twitchclient.ui.chat.ChatViewModel
 import com.example.twitchclient.ui.followings.FollowingsViewModel
+import com.example.twitchclient.ui.games.GamesViewModel
+import com.example.twitchclient.ui.search.SearchViewModel
+import com.example.twitchclient.ui.search.channels.ChannelsTabViewModel
+import com.example.twitchclient.ui.search.games.GamesTabViewModel
 import com.example.twitchclient.ui.stream.StreamViewModel
 import com.example.twitchclient.utils.MyViewModelFactory
 import dagger.Binds
@@ -38,5 +42,26 @@ interface ViewModelModule {
     @ViewModelKey(StreamViewModel::class)
     fun bindStreamViewModel(
         viewModel: StreamViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ChannelsTabViewModel::class)
+    fun bindChannelsTabViewModel(
+        viewModel: ChannelsTabViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchViewModel::class)
+    fun bindSearchViewModel(
+        viewModel: SearchViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(GamesTabViewModel::class)
+    fun bindGamesTabViewModel(
+        viewModel: GamesTabViewModel
     ): ViewModel
 }

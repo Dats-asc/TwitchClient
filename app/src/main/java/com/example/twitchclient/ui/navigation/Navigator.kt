@@ -1,5 +1,6 @@
 package com.example.twitchclient.ui.navigation
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 
 fun Fragment.navigator() : Navigator{
@@ -8,7 +9,7 @@ fun Fragment.navigator() : Navigator{
 
 interface Navigator {
 
-    fun pushFragment(fragment: Fragment, navOption: NavOption?)
+    fun pushFragment(bundle: Bundle?, fragId: Int)
 
     fun replaceFragment(fragment: Fragment)
 

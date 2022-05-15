@@ -11,16 +11,23 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.ActivityMainBinding
 import com.example.twitchclient.ui.followings.FollowingsFragment
-import com.example.twitchclient.ui.games.GamesFragment
 import com.example.twitchclient.ui.navigation.NavOption
 import com.example.twitchclient.ui.navigation.Navigator
-import com.example.twitchclient.ui.popular.PopularFragment
 import com.example.twitchclient.ui.search.SearchFragment
 import com.example.twitchclient.utils.MyViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), Navigator {
@@ -36,24 +43,22 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
 
     private var navOption = NavOption.OPTION_DEFAULT
 
+    private lateinit var navController: NavController
+
+    private val destinationListener =
+        NavController.OnDestinationChangedListener { controller, destination, arguments ->
+            when (destination.id) {
+                R.id.streamFragment -> hideBtmNavAndToolbar()
+                else -> showBtmNavAndToolbar()
+            }
+        }
+
     @Inject
     lateinit var factory: MyViewModelFactory
 
     private val viewModel: MainViewModel by viewModels { factory }
 
     private var currentNavigationItem = R.id.navigation_followings
-
-    private val fragmentListener = object : FragmentManager.FragmentLifecycleCallbacks() {
-        override fun onFragmentViewCreated(
-            fm: FragmentManager,
-            f: Fragment,
-            v: View,
-            savedInstanceState: Bundle?
-        ) {
-            super.onFragmentViewCreated(fm, f, v, savedInstanceState)
-            updateToolbar()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,12 +68,37 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
         putAccessToken("tthzw65o8p57eb80y0jwkr6lfcg3rt")
     }
 
+    override fun onStart() {
+        super.onStart()
+        setupNavigation()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
 
         val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchItem?.actionView = SearchView(this)
+        searchItem?.actionView = SearchView(this, null, R.style.SearchView).also {
+            it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText.orEmpty().isNotEmpty()){
+                        lifecycleScope.launch {
+                            val searchFragment =
+                                supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container)?.childFragmentManager?.let {
+                                    it.fragments[0] as SearchFragment
+                                }
+                            searchFragment?.onQueryCall(newText.orEmpty())
+                        }
+                    }
+                    return true
+                }
+
+            })
+        }
         val searchView: SearchView = searchItem?.actionView as SearchView
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
@@ -76,68 +106,52 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return NavigationUI.onNavDestinationSelected(
+            item,
+            navController
+        ) || super.onOptionsItemSelected(item)
+    }
+
 
     private fun init() {
         preferences = getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
         setupToolbar()
-        setupBottomNavigation()
+    }
+
+    private fun setupNavigation() {
+        navController = findNavController(R.id.nav_host_fragment_container)
+        navController.addOnDestinationChangedListener(destinationListener)
+        NavigationUI.setupWithNavController(
+            binding.bottomNavigationView,
+            navController
+        )
+        NavigationUI.setupActionBarWithNavController(
+            this,
+            navController,
+            AppBarConfiguration(
+                setOf(
+                    R.id.navigation_followings,
+                    R.id.navigation_popular,
+                    R.id.navigation_games
+                )
+            )
+        )
     }
 
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        with(binding.toolbar) {
-            setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.action_search -> {
-                        openSearchFragment()
-                        true
-                    }
-
-                    else -> false
-                }
-            }
-
-            setNavigationOnClickListener {
-                goBack()
-            }
-        }
     }
 
-    private fun setupBottomNavigation() {
-        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener,   false)
-        supportFragmentManager.beginTransaction().run {
-            add(R.id.nav_host_fragment_container, FollowingsFragment())
-            commit()
-        }
-        supportFragmentManager.addOnBackStackChangedListener {
-            updateToolbar()
-        }
-
-        binding.bottomNavigationView.selectedItemId = R.id.navigation_followings
-
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            if (item.itemId != currentNavigationItem) {
-                currentNavigationItem = item.itemId
-                onNavigationItemSelected(currentNavigationItem)
-                true
-            } else
-                false
-        }
+    private fun hideBtmNavAndToolbar() {
+        binding.toolbar.visibility = View.GONE
+        binding.bottomNavigationView.visibility = View.GONE
     }
 
-    private fun onNavigationItemSelected(itemId: Int) {
-        when (itemId) {
-            R.id.navigation_games -> {
-                replaceFragment(GamesFragment())
-            }
-            R.id.navigation_popular -> {
-                replaceFragment(PopularFragment())
-            }
-            R.id.navigation_followings -> {
-                replaceFragment(FollowingsFragment())
-            }
-        }
+    private fun showBtmNavAndToolbar() {
+        binding.toolbar.visibility = View.VISIBLE
+        binding.bottomNavigationView.visibility = View.VISIBLE
     }
 
     private fun updateToolbar() {
@@ -162,28 +176,12 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
         }
     }
 
-    private fun openSearchFragment(){
-        this.navOption = NavOption.OPTION_DEFAULT
-        supportFragmentManager.beginTransaction().run {
-            addToBackStack(null)
-            replace(R.id.nav_host_fragment_container, SearchFragment())
-            commit()
-        }
-    }
+    override fun pushFragment(bundle: Bundle?, fragId: Int) {
+        val options = NavOptions.Builder()
+            .setLaunchSingleTop(false)
+            .build()
+        navController.navigate(fragId, bundle, options)
 
-    override fun pushFragment(fragment: Fragment, navOption: NavOption?) {
-        this.navOption = navOption ?: NavOption.OPTION_DEFAULT
-        supportFragmentManager.beginTransaction().run {
-            setCustomAnimations(
-                R.anim.test1,
-                R.anim.test2,
-                R.anim.test1,
-                R.anim.test2
-            )
-            addToBackStack(null)
-            replace(R.id.nav_host_fragment_container, fragment)
-            commit()
-        }
     }
 
     override fun backToStart() {
@@ -198,14 +196,12 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
         }
     }
 
-    override fun goBack() {
-        onBackPressed()
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        navOption = NavOption.OPTION_DEFAULT
-        updateToolbar()
+    override fun goBack() {
+        onBackPressed()
     }
 
     override fun replaceFragment(fragment: Fragment) {

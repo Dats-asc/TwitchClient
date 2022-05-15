@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_followings">
+
+    <fragment
+        android:id="@+id/navigation_followings"
+        android:name="com.example.twitchclient.ui.followings.FollowingsFragment"
+        android:label="followings_fragment"
+        tools:layout="@layout/followings_fragment" >
+        <action
+            android:id="@+id/action_followingsFragment_to_streamFragment"
+            app:destination="@id/streamFragment"
+            app:enterAnim="@anim/stream_pop_enter"
+            app:launchSingleTop="false"
+            app:popExitAnim="@anim/stream_pop_exit"
+            app:popUpTo="@id/navigation_followings"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_navigation_followings_to_action_search"
+            app:destination="@id/action_search"
+            app:popUpTo="@id/navigation_followings" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_popular"
+        android:name="com.example.twitchclient.ui.popular.PopularFragment"
+        android:label="popular_fragment"
+        tools:layout="@layout/popular_fragment" />
+    <fragment
+        android:id="@+id/navigation_games"
+        android:name="com.example.twitchclient.ui.games.GamesFragment"
+        android:label="games_fragment"
+        tools:layout="@layout/games_fragment" />
+    <fragment
+        android:id="@+id/streamFragment"
+        android:name="com.example.twitchclient.ui.stream.StreamFragment"
+        android:label="stream_fragment"
+        tools:layout="@layout/stream_fragment" />
+    <fragment
+        android:id="@+id/action_search"
+        android:name="com.example.twitchclient.ui.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+</navigation>
