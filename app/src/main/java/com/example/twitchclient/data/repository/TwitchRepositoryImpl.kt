@@ -4,6 +4,8 @@ import com.example.twitchclient.C
 import com.example.twitchclient.data.api.TwitchApi
 import com.example.twitchclient.data.api.mapper.TwitchMapper
 import com.example.twitchclient.domain.entity.emotes.twitch.TwitchGlobalEmotes
+import com.example.twitchclient.domain.entity.search.Channels
+import com.example.twitchclient.domain.entity.search.Games
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.domain.entity.user.User
 import com.example.twitchclient.domain.repository.TwitchRepository
@@ -71,6 +73,18 @@ class TwitchRepositoryImpl @Inject constructor(
 
     override suspend fun getTwitchGlobalEmotes(): TwitchGlobalEmotes {
         return twitchMapper.mapTwitchGlobalEmotesResponse(api.getTwitchGlobalEmotes())
+    }
+
+    override suspend fun getChannelsByRequest(request: String): Channels {
+        return twitchMapper.mapSearchChannelResponse(api.getChannelsByRequest(request))
+    }
+
+    override suspend fun getChannelsAfter(request: String, after: String): Channels {
+        return twitchMapper.mapSearchChannelResponse(api.getChannelsAfter(request, after))
+    }
+
+    override suspend fun getGamesByRequest(request: String, cursor: String?): Games {
+        return twitchMapper.mapGamesResponse(api.getGamesByRequest(request, cursor))
     }
 
 }

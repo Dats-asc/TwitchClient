@@ -1,4 +1,10 @@
 package com.example.twitchclient.ui.search
 
-class SearchViewModel {
+import androidx.lifecycle.ViewModel
+import javax.inject.Inject
+
+class SearchViewModel @Inject constructor(
+
+) : ViewModel() {
+
 }

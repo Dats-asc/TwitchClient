@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.StreamFragmentBinding
@@ -78,6 +79,7 @@ class StreamFragment : Fragment() {
             val btnFullScree = it.findViewById<ImageView>(R.id.btn_fullscreen)
             val tvBroadcasterName = it.findViewById<TextView>(R.id.tv_broadcaster_name)
             val btnSettings = it.findViewById<ImageView>(R.id.btn_settings)
+            val btnPopUp = it.findViewById<ImageView>(R.id.btn_pop_up)
 
             tvBroadcasterName.text = broadcasterLogin
 
@@ -98,6 +100,10 @@ class StreamFragment : Fragment() {
 
             btnSettings.setOnClickListener {
                 onSetVideoQualityOptionClicked()
+            }
+
+            btnPopUp.setOnClickListener {
+                findNavController().navigateUp()
             }
         }
     }

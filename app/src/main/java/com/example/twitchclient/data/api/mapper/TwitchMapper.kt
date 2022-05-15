@@ -1,11 +1,17 @@
 package com.example.twitchclient.data.api.mapper
 
+import com.example.twitchclient.data.responses.games.GamesResponse
+import com.example.twitchclient.data.responses.twitch.channels.SearchChannelsResponse
 import com.example.twitchclient.data.responses.twitch.emotes.TwitchGlobalEmotesResponse
 import com.example.twitchclient.data.responses.twitch.stream.StreamData
 import com.example.twitchclient.data.responses.twitch.stream.StreamsResponse
 import com.example.twitchclient.data.responses.twitch.user.UserResponse
 import com.example.twitchclient.domain.entity.emotes.twitch.Emote
 import com.example.twitchclient.domain.entity.emotes.twitch.TwitchGlobalEmotes
+import com.example.twitchclient.domain.entity.search.ChannelInfo
+import com.example.twitchclient.domain.entity.search.Channels
+import com.example.twitchclient.domain.entity.search.GameInfo
+import com.example.twitchclient.domain.entity.search.Games
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.domain.entity.user.User
 
@@ -53,6 +59,38 @@ class TwitchMapper {
             emotes = mappedEmoteList,
             template = response.template
         )
+    }
+
+    fun mapSearchChannelResponse(response: SearchChannelsResponse): Channels {
+        val mappedList = arrayListOf<ChannelInfo>()
+        response.data.forEach { channel ->
+            mappedList.add(
+                ChannelInfo(
+                    broadcaster_login = channel.broadcaster_login,
+                    display_name = channel.display_name,
+                    id = channel.id,
+                    game_id = channel.game_id,
+                    is_live = channel.is_live,
+                    thumbnail_url = channel.thumbnail_url
+                )
+            )
+        }
+        return Channels(mappedList, response.pagination.cursor)
+    }
+
+    fun mapGamesResponse(response: GamesResponse): Games {
+        val mappedList = arrayListOf<GameInfo>()
+        response.data.forEach { game ->
+            mappedList.add(
+                GameInfo(
+                    id = game.id,
+                    name = game.name,
+                    box_art_url = game.box_art_url
+                )
+            )
+        }
+
+        return Games(mappedList, response.pagination.cursor)
     }
 
     private fun mapStreamData(streamData: StreamData) =

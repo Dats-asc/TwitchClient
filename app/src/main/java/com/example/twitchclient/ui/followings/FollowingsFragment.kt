@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.twitchclient.C
+import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FollowingsFragmentBinding
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.ui.main.MainActivity
 import com.example.twitchclient.ui.navigation.NavOption
+import com.example.twitchclient.ui.navigation.Navigator
 import com.example.twitchclient.ui.navigation.navigator
 import com.example.twitchclient.ui.stream.StreamFragment
 import com.google.android.material.snackbar.Snackbar
@@ -64,13 +67,10 @@ class FollowingsFragment : Fragment() {
 
     private fun initAdapter(data: Streams){
         streamAdapter = StreamAdapter(data.data) { streamData ->
-            navigator().pushFragment(
-                StreamFragment().apply {
-                    arguments = bundleOf(C.BROADCASTER_LOGIN to streamData.user_login)
-                },
-                NavOption.OPTION_HIDE_TOOLBAR_AND_BOTTOM_NAV_VIEW
+            findNavController().navigate(
+                R.id.action_followingsFragment_to_streamFragment,
+                bundleOf(C.BROADCASTER_LOGIN to streamData.user_login)
             )
-
         }
         binding.rvStreams.adapter = streamAdapter
     }
