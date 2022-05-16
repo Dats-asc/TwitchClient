@@ -29,8 +29,6 @@
 
     <style name="MainFragmentStyle">
         <item name="android:background">#666666</item>
-        <item name="android:paddingStart">8dp</item>
-        <item name="android:paddingEnd">8dp</item>
     </style>
 
     <style name="Progressbar" parent="Widget.AppCompat.ProgressBar">

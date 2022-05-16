@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.twitchclient.data.api.mapper.TwitchMapper
 import com.example.twitchclient.data.repository.TwitchRepositoryImpl
 import com.example.twitchclient.databinding.GamesFragmentBinding
@@ -19,12 +21,14 @@ import kotlinx.coroutines.launch
 class GamesFragment : Fragment() {
 
     private lateinit var binding: GamesFragmentBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = GamesFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+    ): View? = GamesFragmentBinding.inflate(inflater, container, false).let {
+        binding = it
+        binding.toolbar.setupWithNavController(findNavController())
+        binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

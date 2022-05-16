@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FollowingsFragmentBinding
@@ -33,6 +34,7 @@ class FollowingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = FollowingsFragmentBinding.inflate(inflater, container, false).let {
         binding = FollowingsFragmentBinding.inflate(inflater, container, false)
+        binding.toolbar.setupWithNavController(findNavController())
         binding.root
     }
 

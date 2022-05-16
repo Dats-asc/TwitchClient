@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.PopularFragmentBinding
@@ -31,6 +32,7 @@ class PopularFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = PopularFragmentBinding.inflate(inflater, container, false).let {
         binding = PopularFragmentBinding.inflate(inflater, container, false)
+        binding.toolbar.setupWithNavController(findNavController())
         binding.root
     }
 

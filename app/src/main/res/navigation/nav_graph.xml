@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_followings"
         android:name="com.example.twitchclient.ui.followings.FollowingsFragment"
-        android:label="followings_fragment"
+        android:label="Отслеживаемое"
         tools:layout="@layout/followings_fragment" >
         <action
             android:id="@+id/action_followingsFragment_to_streamFragment"
@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/navigation_popular"
         android:name="com.example.twitchclient.ui.popular.PopularFragment"
-        android:label="popular_fragment"
+        android:label="Популярное"
         tools:layout="@layout/popular_fragment" >
         <action
             android:id="@+id/action_navigation_popular_to_action_search"
@@ -44,7 +44,7 @@
     <fragment
         android:id="@+id/navigation_games"
         android:name="com.example.twitchclient.ui.games.GamesFragment"
-        android:label="games_fragment"
+        android:label="Игры"
         tools:layout="@layout/games_fragment" >
         <action
             android:id="@+id/action_navigation_games_to_action_search"

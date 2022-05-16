@@ -17,6 +17,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.ActivityMainBinding
 import com.example.twitchclient.ui.followings.FollowingsFragment
@@ -30,7 +31,7 @@ import kotlinx.coroutines.launch
 import okhttp3.internal.wait
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity(), Navigator {
+class MainActivity : DaggerAppCompatActivity() {
 
     companion object {
         private const val USER_PREFERENCES = "USER_PREFERENCES"
@@ -43,13 +44,9 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
 
     private var navOption = NavOption.OPTION_DEFAULT
 
-    private lateinit var navController: NavController
-
     private val destinationListener =
         NavController.OnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
-                R.id.streamFragment -> hideBtmNavAndToolbar()
-                else -> showBtmNavAndToolbar()
             }
         }
 
@@ -106,29 +103,25 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(
-            item,
-            navController
-        ) || super.onOptionsItemSelected(item)
-    }
-
 
     private fun init() {
         preferences = getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
-        setupToolbar()
+    }
+
+    private fun hideBottomNav(){
+        binding.bottomNavigationView.visibility = View.GONE
+    }
+
+    private fun showBottomNav(){
+        binding.bottomNavigationView.visibility = View.VISIBLE
     }
 
     private fun setupNavigation() {
-        navController = findNavController(R.id.nav_host_fragment_container)
-        navController.addOnDestinationChangedListener(destinationListener)
-        NavigationUI.setupWithNavController(
-            binding.bottomNavigationView,
-            navController
-        )
+        setSupportActionBar(binding.toolbar)
+        binding.bottomNavigationView.setupWithNavController(findNavController(R.id.nav_host_fragment_container))
         NavigationUI.setupActionBarWithNavController(
             this,
-            navController,
+            findNavController(R.id.nav_host_fragment_container),
             AppBarConfiguration(
                 setOf(
                     R.id.navigation_followings,
@@ -137,78 +130,6 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
                 )
             )
         )
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    private fun hideBtmNavAndToolbar() {
-        binding.toolbar.visibility = View.GONE
-        binding.bottomNavigationView.visibility = View.GONE
-    }
-
-    private fun showBtmNavAndToolbar() {
-        binding.toolbar.visibility = View.VISIBLE
-        binding.bottomNavigationView.visibility = View.VISIBLE
-    }
-
-    private fun updateToolbar() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayShowHomeEnabled(true)
-        } else {
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            supportActionBar?.setDisplayShowHomeEnabled(false)
-        }
-
-
-        when (navOption) {
-            NavOption.OPTION_HIDE_TOOLBAR_AND_BOTTOM_NAV_VIEW -> {
-                binding.bottomNavigationView.visibility = View.GONE
-                supportActionBar?.hide()
-            }
-            NavOption.OPTION_DEFAULT -> {
-                binding.bottomNavigationView.visibility = View.VISIBLE
-                supportActionBar?.show()
-            }
-        }
-    }
-
-    override fun pushFragment(bundle: Bundle?, fragId: Int) {
-        val options = NavOptions.Builder()
-            .setLaunchSingleTop(false)
-            .build()
-        navController.navigate(fragId, bundle, options)
-
-    }
-
-    override fun backToStart() {
-        navOption = NavOption.OPTION_DEFAULT
-        updateToolbar()
-        with(supportFragmentManager) {
-            popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            beginTransaction().run {
-                replace(R.id.nav_host_fragment_container, FollowingsFragment())
-                commit()
-            }
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    override fun goBack() {
-        onBackPressed()
-    }
-
-    override fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().run {
-            replace(R.id.nav_host_fragment_container, fragment)
-            commit()
-        }
     }
 
     fun putAccessToken(token: String) {
