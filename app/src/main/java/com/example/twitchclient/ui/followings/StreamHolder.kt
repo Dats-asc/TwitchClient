@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitchclient.databinding.ItemStreamBinding
 import com.example.twitchclient.domain.entity.streams.StreamData
+import com.example.twitchclient.domain.entity.streams.StreamItem
 import com.example.twitchclient.utils.Utils
 
 class StreamHolder (
@@ -23,6 +24,7 @@ class StreamHolder (
             tvChannelName.text = item.user_name
             tvStreamTitle.text = item.title
             tvStreamCategory.text = item.game_name
+            tvViewersCount?.text = item.viewer_count.toString()
         }
         itemView.setOnClickListener{
             action(item)

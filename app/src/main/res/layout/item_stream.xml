@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginVertical="8dp"
     android:background="@drawable/item_stream_background"
     android:clickable="true"
@@ -18,6 +19,32 @@
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_circle"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_baseline_circle_24"
+        app:layout_constraintBottom_toBottomOf="@id/iv_stream_preview"
+        app:layout_constraintStart_toStartOf="@id/iv_stream_preview" />
+
+    <TextView
+        android:id="@+id/tv_viewers_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:shadowColor="#000000"
+        android:shadowRadius="4"
+        tools:text="1.5 тыс."
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_circle"
+        app:layout_constraintStart_toEndOf="@id/iv_circle"
+        app:layout_constraintTop_toTopOf="@id/iv_circle">
+
+    </TextView>
 
     <ImageView
         android:id="@+id/iv_streamer_avatar"

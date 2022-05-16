@@ -3,7 +3,6 @@ package com.example.twitchclient.data.api.mapper
 import com.example.twitchclient.data.responses.games.GamesResponse
 import com.example.twitchclient.data.responses.twitch.channels.SearchChannelsResponse
 import com.example.twitchclient.data.responses.twitch.emotes.TwitchGlobalEmotesResponse
-import com.example.twitchclient.data.responses.twitch.stream.StreamData
 import com.example.twitchclient.data.responses.twitch.stream.StreamsResponse
 import com.example.twitchclient.data.responses.twitch.user.UserResponse
 import com.example.twitchclient.domain.entity.emotes.twitch.Emote
@@ -12,6 +11,7 @@ import com.example.twitchclient.domain.entity.search.ChannelInfo
 import com.example.twitchclient.domain.entity.search.Channels
 import com.example.twitchclient.domain.entity.search.GameInfo
 import com.example.twitchclient.domain.entity.search.Games
+import com.example.twitchclient.domain.entity.streams.StreamData
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.domain.entity.user.User
 
@@ -32,12 +32,28 @@ class TwitchMapper {
     }
 
     fun mapStreamResponse(response: StreamsResponse): Streams {
-        val streamList = mutableListOf<com.example.twitchclient.domain.entity.streams.StreamData>()
+        val streamList = arrayListOf<com.example.twitchclient.domain.entity.streams.StreamData>()
         response.data.forEach { stream ->
-            streamList.add(mapStreamData(stream))
+            streamList.add(StreamData(
+                id = stream.id,
+                user_id = stream.id,
+                user_login = stream.user_login,
+                user_name = stream.user_name,
+                game_id = stream.game_id,
+                game_name = stream.game_name,
+                type = stream.type,
+                title = stream.title,
+                viewer_count = stream.viewer_count,
+                started_at = stream.started_at,
+                language = stream.language,
+                thumbnail_url = with(stream.thumbnail_url) {
+                    this.replace("{width}", "640")
+                        .replace("{height}", "360")
+                }
+            ))
         }
 
-        return Streams(data = streamList)
+        return Streams(streams = streamList, cursor = response.pagination.cursor.orEmpty())
     }
 
     fun mapTwitchGlobalEmotesResponse(response: TwitchGlobalEmotesResponse): TwitchGlobalEmotes {

@@ -17,7 +17,8 @@ import javax.inject.Inject
 
 class TwitchRepositoryImpl @Inject constructor(
     private val twitchMapper: TwitchMapper,
-    private val accessToken: String?
+    private val accessToken: String?,
+    private val twitchApi: TwitchApi
 ) : TwitchRepository {
 
     private val BASE_URL = "https://api.twitch.tv/helix/"
@@ -25,66 +26,40 @@ class TwitchRepositoryImpl @Inject constructor(
     private val AUTH_QUERY_PARAMETER = "Authorization"
     private val CLIENT_ID_QUERY_PARAMETER = "Client-Id"
 
-    private val authInterceptor = Interceptor { chain ->
-        chain.run {
-            val updatedRequestUrl = request().url.newBuilder()
-                .build()
-
-            proceed(
-                request().newBuilder()
-                    .url(updatedRequestUrl)
-                    .addHeader(CLIENT_ID_QUERY_PARAMETER, C.CLIENT_ID)
-                    .addHeader(AUTH_QUERY_PARAMETER, "Bearer $accessToken")
-                    .build()
-            )
-        }
-    }
-
-    private val okhttp: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .addInterceptor(authInterceptor)
-            .build()
-    }
-
-    private val api: TwitchApi by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okhttp)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(TwitchApi::class.java)
-    }
-
     override suspend fun pingUser(): User {
-        return twitchMapper.mapUserResponse(api.pingUser())
+        return twitchMapper.mapUserResponse(twitchApi.pingUser())
     }
 
     override suspend fun getUserById(id: String): User {
-        return twitchMapper.mapUserResponse(api.getUserById(id))
+        return twitchMapper.mapUserResponse(twitchApi.getUserById(id))
     }
 
     override suspend fun getUserByLogin(login: String): User {
-        return twitchMapper.mapUserResponse(api.getUserByLogin(login))
+        return twitchMapper.mapUserResponse(twitchApi.getUserByLogin(login))
     }
 
     override suspend fun getFollowedStreams(userId: String): Streams {
-        return twitchMapper.mapStreamResponse(api.getFollowedStreams(userId))
+        return twitchMapper.mapStreamResponse(twitchApi.getFollowedStreams(userId))
     }
 
     override suspend fun getTwitchGlobalEmotes(): TwitchGlobalEmotes {
-        return twitchMapper.mapTwitchGlobalEmotesResponse(api.getTwitchGlobalEmotes())
+        return twitchMapper.mapTwitchGlobalEmotesResponse(twitchApi.getTwitchGlobalEmotes())
     }
 
     override suspend fun getChannelsByRequest(request: String): Channels {
-        return twitchMapper.mapSearchChannelResponse(api.getChannelsByRequest(request))
+        return twitchMapper.mapSearchChannelResponse(twitchApi.getChannelsByRequest(request))
+    }
+
+    override suspend fun getStreams(cursor: String?): Streams {
+        return twitchMapper.mapStreamResponse(twitchApi.getStreams(cursor))
     }
 
     override suspend fun getChannelsAfter(request: String, after: String): Channels {
-        return twitchMapper.mapSearchChannelResponse(api.getChannelsAfter(request, after))
+        return twitchMapper.mapSearchChannelResponse(twitchApi.getChannelsAfter(request, after))
     }
 
     override suspend fun getGamesByRequest(request: String, cursor: String?): Games {
-        return twitchMapper.mapGamesResponse(api.getGamesByRequest(request, cursor))
+        return twitchMapper.mapGamesResponse(twitchApi.getGamesByRequest(request, cursor))
     }
 
 }

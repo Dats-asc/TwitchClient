@@ -12,14 +12,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FollowingsFragmentBinding
+import com.example.twitchclient.domain.entity.streams.StreamData
+import com.example.twitchclient.domain.entity.streams.StreamItem
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.ui.main.MainActivity
-import com.example.twitchclient.ui.navigation.NavOption
-import com.example.twitchclient.ui.navigation.Navigator
-import com.example.twitchclient.ui.navigation.navigator
-import com.example.twitchclient.ui.stream.StreamFragment
 import com.google.android.material.snackbar.Snackbar
-import javax.inject.Singleton
 
 class FollowingsFragment : Fragment() {
 
@@ -41,21 +38,17 @@ class FollowingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.savedData?.let {
-            initAdapter(it)
-        } ?: kotlin.run {
-            initObservers()
-            binding.progressbar.visibility = View.VISIBLE
-            viewModel.getFollowedStreams()
-        }
+        initAdapter()
+        initObservers()
+        binding.progressbar.visibility = View.VISIBLE
+        viewModel.getFollowedStreams()
     }
 
     private fun initObservers() {
         viewModel.queryStreams.observe(requireActivity()) {
             it.fold(
                 onSuccess = { streams ->
-                    initAdapter(streams)
-                    viewModel.savedData = streams
+                    onStreamsLoad(streams.streams)
                     binding.progressbar.visibility = View.GONE
                 }, onFailure = {
                     Snackbar.make(binding.root, "Something go wrong", Snackbar.LENGTH_LONG).show()
@@ -65,13 +58,19 @@ class FollowingsFragment : Fragment() {
         }
     }
 
-    private fun initAdapter(data: Streams){
-        streamAdapter = StreamAdapter(data.data) { streamData ->
+    private fun onStreamsLoad(streams: ArrayList<StreamData>) {
+        streamAdapter?.updateData(streams)
+    }
+
+    private fun initAdapter() {
+        streamAdapter = StreamAdapter(arrayListOf(), onItemClicked = { streamData ->
             findNavController().navigate(
                 R.id.action_followingsFragment_to_streamFragment,
                 bundleOf(C.BROADCASTER_LOGIN to streamData.user_login)
             )
-        }
+        }, onNextStreams = {
+
+        })
         binding.rvStreams.adapter = streamAdapter
     }
 

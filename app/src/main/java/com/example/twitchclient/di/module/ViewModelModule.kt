@@ -6,6 +6,7 @@ import com.example.twitchclient.di.ViewModelKey
 import com.example.twitchclient.ui.chat.ChatViewModel
 import com.example.twitchclient.ui.followings.FollowingsViewModel
 import com.example.twitchclient.ui.games.GamesViewModel
+import com.example.twitchclient.ui.popular.PopularViewModel
 import com.example.twitchclient.ui.search.SearchViewModel
 import com.example.twitchclient.ui.search.channels.ChannelsTabViewModel
 import com.example.twitchclient.ui.search.games.GamesTabViewModel
@@ -63,5 +64,12 @@ interface ViewModelModule {
     @ViewModelKey(GamesTabViewModel::class)
     fun bindGamesTabViewModel(
         viewModel: GamesTabViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PopularViewModel::class)
+    fun bindPopularViewModel(
+        viewModel: PopularViewModel
     ): ViewModel
 }
