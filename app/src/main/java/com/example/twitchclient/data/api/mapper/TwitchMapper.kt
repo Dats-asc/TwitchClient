@@ -101,7 +101,10 @@ class TwitchMapper {
                 GameInfo(
                     id = game.id,
                     name = game.name,
-                    box_art_url = game.box_art_url
+                    box_art_url = with(game.box_art_url) {
+                        this.replace("{width}", "52")
+                            .replace("{height}", "72")
+                    }
                 )
             )
         }

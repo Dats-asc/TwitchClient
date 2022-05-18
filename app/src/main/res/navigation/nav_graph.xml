@@ -8,25 +8,24 @@
     <fragment
         android:id="@+id/navigation_followings"
         android:name="com.example.twitchclient.ui.followings.FollowingsFragment"
-        android:label="Отслеживаемое"
         tools:layout="@layout/followings_fragment" >
         <action
             android:id="@+id/action_followingsFragment_to_streamFragment"
             app:destination="@id/streamFragment"
-            app:enterAnim="@anim/stream_pop_enter"
+            app:enterAnim="@anim/enter_from_right"
             app:launchSingleTop="false"
-            app:popExitAnim="@anim/stream_pop_exit"
+            app:popExitAnim="@anim/exit_to_right"
             app:popUpTo="@id/navigation_followings"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_navigation_followings_to_action_search"
             app:destination="@id/action_search"
+            app:launchSingleTop="true"
             app:popUpTo="@id/navigation_followings" />
     </fragment>
     <fragment
         android:id="@+id/navigation_popular"
         android:name="com.example.twitchclient.ui.popular.PopularFragment"
-        android:label="Популярное"
         tools:layout="@layout/popular_fragment" >
         <action
             android:id="@+id/action_navigation_popular_to_action_search"
@@ -37,27 +36,26 @@
             android:id="@+id/action_navigation_popular_to_streamFragment"
             app:destination="@id/streamFragment"
             app:enterAnim="@anim/stream_pop_enter"
-            app:launchSingleTop="false"
+            app:launchSingleTop="true"
             app:popExitAnim="@anim/stream_pop_exit"
+            app:popUpTo="@id/navigation_popular"
             app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/navigation_games"
         android:name="com.example.twitchclient.ui.games.GamesFragment"
-        android:label="Игры"
         tools:layout="@layout/games_fragment" >
         <action
             android:id="@+id/action_navigation_games_to_action_search"
-            app:destination="@id/action_search" />
+            app:destination="@id/action_search"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/streamFragment"
         android:name="com.example.twitchclient.ui.stream.StreamFragment"
-        android:label="stream_fragment"
         tools:layout="@layout/stream_fragment" />
     <fragment
         android:id="@+id/action_search"
         android:name="com.example.twitchclient.ui.search.SearchFragment"
-        android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
 </navigation>

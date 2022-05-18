@@ -8,10 +8,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.PopularFragmentBinding
+import com.example.twitchclient.domain.entity.streams.StreamData
 import com.example.twitchclient.domain.entity.streams.Streams
 import com.example.twitchclient.ui.followings.StreamAdapter
 import com.example.twitchclient.ui.main.MainActivity
@@ -32,7 +34,27 @@ class PopularFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = PopularFragmentBinding.inflate(inflater, container, false).let {
         binding = PopularFragmentBinding.inflate(inflater, container, false)
-        binding.toolbar.setupWithNavController(findNavController())
+        with(binding.toolbar) {
+            setupWithNavController(
+                findNavController(),
+                AppBarConfiguration(
+                    setOf(
+                        R.id.navigation_followings,
+                        R.id.navigation_popular,
+                        R.id.navigation_games
+                    )
+                )
+            )
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.action_search -> {
+                        findNavController().navigate(R.id.action_navigation_popular_to_action_search)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
         binding.root
     }
 
@@ -49,31 +71,19 @@ class PopularFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.queryStreams.observe(requireActivity()) {
-            it.fold(onSuccess = { streams ->
-                onStreamsResponse(streams)
+        viewModel.streams.observe(viewLifecycleOwner) {
+            it.fold(onSuccess = {
+                onStreamsResponse(it)
             }, onFailure = {
-                Snackbar.make(binding.root, it.message.orEmpty(), Snackbar.LENGTH_SHORT)
-            })
-        }
-        viewModel.nextStreams.observe(requireActivity()) {
-            it.fold(onSuccess = { streams ->
-                onNextStreams(streams)
-            }, onFailure = {
-                Snackbar.make(binding.root, it.message.orEmpty(), Snackbar.LENGTH_SHORT)
+                Snackbar.make(binding.root, it.message.orEmpty(), Snackbar.LENGTH_SHORT).show()
             })
         }
     }
 
-    private fun onStreamsResponse(streams: Streams) {
-        streamAdapter?.updateData(streams.streams)
+    private fun onStreamsResponse(streams: ArrayList<StreamData>) {
+        streamAdapter?.updateData(streams)
         binding.progressbar.visibility = View.GONE
-    }
-
-    private fun onNextStreams(streams: Streams) {
-        streamAdapter?.nextStreams(streams.streams)
         binding.recyclerProgressbar.visibility = View.GONE
-        binding.rvStreams.scrollToPosition(streamAdapter?.itemCount ?: 0 - 19)
     }
 
     private fun initAdapter() {
@@ -86,7 +96,7 @@ class PopularFragment : Fragment() {
 //                )
 
                 findNavController().navigate(
-                    R.id.streamFragment,
+                    R.id.action_navigation_popular_to_streamFragment,
                     bundleOf(C.BROADCASTER_LOGIN to streamData.user_login)
                 )
             },

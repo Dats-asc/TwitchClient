@@ -4,46 +4,63 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.twitchclient.domain.entity.search.GameInfo
 import com.example.twitchclient.domain.entity.search.Games
 import com.example.twitchclient.domain.usecases.twitch.GetGamesByRequestUseCase
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 class GamesTabViewModel @Inject constructor(
     private val getGamesByRequestUseCase: GetGamesByRequestUseCase
 ) : ViewModel() {
 
-    private var lastRequest: String? = null
+    private val allGames = arrayListOf<GameInfo>()
 
     private var lastCursor: String? = null
 
+    private var lastRequest = ""
+
     private var _queryGames: MutableLiveData<Result<Games>> = MutableLiveData()
-    val queryGames: LiveData<Result<Games>> = _queryGames
 
-    private var _queryNextGames: MutableLiveData<Result<Games>> = MutableLiveData()
-    val queryNextGames: LiveData<Result<Games>> = _queryNextGames
+    private var _games: MutableLiveData<Result<ArrayList<GameInfo>>> = MutableLiveData()
+    val games: LiveData<Result<ArrayList<GameInfo>>> = _games
 
-    fun onFirstQuery(request: String) {
+    init {
+        _queryGames.observeForever {
+            it.fold(
+                onSuccess = { gamesResponse ->
+                    allGames.addAll(gamesResponse.games)
+                    _games.value = Result.success(allGames)
+                }, onFailure = {
+                    _games.value = Result.failure(it)
+                }
+            )
+        }
+    }
+
+    fun getGames(request: String) {
+        allGames.clear()
         viewModelScope.launch {
             try {
-                val channels = getGamesByRequestUseCase(request, null)
-                _queryGames.value = Result.success(channels)
+                val followedStreams = getGamesByRequestUseCase(request, null)
+                _queryGames.value = Result.success(followedStreams)
+                lastCursor = followedStreams.cursor
                 lastRequest = request
             } catch (e: Exception) {
                 _queryGames.value = Result.failure(e)
             }
         }
-
     }
 
-    fun onNextChannels() {
+    fun getNextGames() {
         viewModelScope.launch {
             try {
-                val channels = getGamesByRequestUseCase(lastRequest.orEmpty(), lastCursor.orEmpty())
-                _queryNextGames.value = Result.success(channels)
-                lastCursor = channels.cursor
+                val followedStreams = getGamesByRequestUseCase(lastRequest, lastCursor)
+                _queryGames.value = Result.success(followedStreams)
+                lastCursor = followedStreams.cursor
             } catch (e: Exception) {
-                _queryNextGames.value = Result.failure(e)
+                _queryGames.value = Result.failure(e)
             }
         }
     }

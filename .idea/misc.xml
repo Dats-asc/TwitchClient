@@ -29,6 +29,8 @@
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.2953125" />
         <entry key="app/src/main/res/menu/bottom_nav_meny.xml" value="0.2953125" />
         <entry key="app/src/main/res/menu/search_toolbar.xml" value="0.2953125" />
+        <entry key="app/src/main/res/menu/search_toolbar_menu.xml" value="0.2953125" />
+        <entry key="app/src/main/res/menu/search_toolbar_meny.xml" value="2.025" />
         <entry key="app/src/main/res/menu/toolbar_menu.xml" value="0.2953125" />
         <entry key="app/src/main/res/xml/searchable.xml" value="0.2953125" />
       </map>

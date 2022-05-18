@@ -10,13 +10,46 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tablayout"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="flagNoFullscreen"
+                    android:inputType="textAutoComplete"
+                    android:textDirection="locale"
+                    app:queryBackground="@android:color/transparent"
+                    app:queryHint="Поиск"
+                    app:searchIcon="@null"
+                    app:iconifiedByDefault="false"
+                    />
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TabLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_layout">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"

@@ -72,4 +72,11 @@ interface ViewModelModule {
     fun bindPopularViewModel(
         viewModel: PopularViewModel
     ): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(GamesViewModel::class)
+    fun bindGamesViewModel(
+        viewModel: GamesViewModel
+    ): ViewModel
 }

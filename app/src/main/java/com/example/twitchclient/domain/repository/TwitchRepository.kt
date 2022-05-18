@@ -22,6 +22,8 @@ interface TwitchRepository {
 
     suspend fun getStreams(cursor: String?): Streams
 
+    suspend fun getTopGames(cursor: String?): Games
+
     suspend fun getChannelsAfter(request: String, after: String): Channels
 
     suspend fun getGamesByRequest(request: String, cursor: String?): Games

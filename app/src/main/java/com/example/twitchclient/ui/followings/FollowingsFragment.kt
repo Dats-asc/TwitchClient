@@ -1,5 +1,6 @@
 package com.example.twitchclient.ui.followings
 
+import android.app.ActionBar
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,8 +35,19 @@ class FollowingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = FollowingsFragmentBinding.inflate(inflater, container, false).let {
         binding = FollowingsFragmentBinding.inflate(inflater, container, false)
-        binding.toolbar.setupWithNavController(findNavController())
-        binding.root
+        with(binding.toolbar) {
+            setupWithNavController(findNavController())
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.action_search -> {
+                        findNavController().navigate(R.id.action_navigation_followings_to_action_search)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            binding.root
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,7 +59,7 @@ class FollowingsFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.queryStreams.observe(requireActivity()) {
+        viewModel.queryStreams.observe(viewLifecycleOwner) {
             it.fold(
                 onSuccess = { streams ->
                     onStreamsLoad(streams.streams)

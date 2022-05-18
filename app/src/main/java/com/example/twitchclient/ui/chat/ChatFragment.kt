@@ -68,7 +68,7 @@ class ChatFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.queryChatMessages.observe(requireActivity()) {
+        viewModel.queryChatMessages.observe(viewLifecycleOwner) {
             it.fold(
                 onSuccess = { chatMessage ->
                     onChatMessage(chatMessage)
@@ -76,7 +76,7 @@ class ChatFragment : Fragment() {
                 onFailure = { Log.e("On chat message", it.message.toString()) }
             )
         }
-        viewModel.chatEmotes.observe(requireActivity()) {
+        viewModel.chatEmotes.observe(viewLifecycleOwner) {
             it.fold(
                 onSuccess = { chatEmotes ->
                     onChatDataLoaded(chatEmotes)

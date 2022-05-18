@@ -23,7 +23,7 @@ interface TwitchApi {
     suspend fun getFollowedStreams(@Query("user_id") userId: String): StreamsResponse
 
     @GET("/helix/streams")
-    suspend fun getStreams(@Query("after") cursor: String?) : StreamsResponse
+    suspend fun getStreams(@Query("after") cursor: String?): StreamsResponse
 
     @GET("/helix/chat/emotes/global")
     suspend fun getTwitchGlobalEmotes(): TwitchGlobalEmotesResponse
@@ -36,6 +36,9 @@ interface TwitchApi {
         @Query("query") query: String,
         @Query("after") cursor: String
     ): SearchChannelsResponse
+
+    @GET("/helix/games/top")
+    suspend fun getTopGames(@Query("after") cursor: String?): GamesResponse
 
     @GET("/helix/search/categories")
     suspend fun getGamesByRequest(

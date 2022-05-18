@@ -47,6 +47,10 @@ class MainActivity : DaggerAppCompatActivity() {
     private val destinationListener =
         NavController.OnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
+                R.id.streamFragment -> {
+                    hideBottomNav()
+                }
+                else -> showBottomNav()
             }
         }
 
@@ -70,39 +74,9 @@ class MainActivity : DaggerAppCompatActivity() {
         setupNavigation()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
-
-        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchItem?.actionView = SearchView(this, null, R.style.SearchView).also {
-            it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    if (newText.orEmpty().isNotEmpty()){
-                        lifecycleScope.launch {
-                            val searchFragment =
-                                supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container)?.childFragmentManager?.let {
-                                    it.fragments[0] as SearchFragment
-                                }
-                            searchFragment?.onQueryCall(newText.orEmpty())
-                        }
-                    }
-                    return true
-                }
-
-            })
-        }
-        val searchView: SearchView = searchItem?.actionView as SearchView
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-
-        return super.onCreateOptionsMenu(menu)
+    override fun onBackPressed() {
+        findNavController(R.id.nav_host_fragment_container).navigateUp()
     }
-
 
     private fun init() {
         preferences = getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
@@ -119,17 +93,7 @@ class MainActivity : DaggerAppCompatActivity() {
     private fun setupNavigation() {
         setSupportActionBar(binding.toolbar)
         binding.bottomNavigationView.setupWithNavController(findNavController(R.id.nav_host_fragment_container))
-        NavigationUI.setupActionBarWithNavController(
-            this,
-            findNavController(R.id.nav_host_fragment_container),
-            AppBarConfiguration(
-                setOf(
-                    R.id.navigation_followings,
-                    R.id.navigation_popular,
-                    R.id.navigation_games
-                )
-            )
-        )
+        findNavController(R.id.nav_host_fragment_container).addOnDestinationChangedListener(destinationListener)
     }
 
     fun putAccessToken(token: String) {

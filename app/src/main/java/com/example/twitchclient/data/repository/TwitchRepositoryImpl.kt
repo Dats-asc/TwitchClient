@@ -54,6 +54,10 @@ class TwitchRepositoryImpl @Inject constructor(
         return twitchMapper.mapStreamResponse(twitchApi.getStreams(cursor))
     }
 
+    override suspend fun getTopGames(cursor: String?): Games {
+        return twitchMapper.mapGamesResponse(twitchApi.getTopGames(cursor))
+    }
+
     override suspend fun getChannelsAfter(request: String, after: String): Channels {
         return twitchMapper.mapSearchChannelResponse(twitchApi.getChannelsAfter(request, after))
     }

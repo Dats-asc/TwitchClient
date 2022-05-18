@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.twitchclient.databinding.ItemStreamBinding
 import com.example.twitchclient.domain.entity.streams.StreamData
 import com.example.twitchclient.domain.entity.streams.StreamItem
@@ -19,7 +20,7 @@ class StreamHolder (
         with(binding){
             Glide.with(itemView.context)
                 .load(item.thumbnail_url)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(ivStreamPreview)
             tvChannelName.text = item.user_name
             tvStreamTitle.text = item.title
