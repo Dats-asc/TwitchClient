@@ -8,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FragmentChannelsTabBinding
 import com.example.twitchclient.domain.entity.search.ChannelInfo
@@ -74,8 +77,11 @@ class ChannelsTabFragment : Fragment(), SearchableTab {
     private fun initAdapter() {
         channelsAdapter = ChannelsAdapter(
             arrayListOf(),
-            onItemClicked = {
-
+            onItemClicked = { userId ->
+                findNavController().navigate(
+                    R.id.action_action_search_to_channelDetailFragment,
+                    bundleOf(C.USER_ID to userId)
+                )
             }, onNextChannels = {
                 viewModel.getNextChannels()
                 binding.recyclerProgressbar.visibility = View.VISIBLE

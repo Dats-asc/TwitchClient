@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -54,7 +56,13 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = FragmentSearchBinding.inflate(inflater, container, false).let {
         binding = it
-        binding.toolbar.setupWithNavController(findNavController())
+        binding.toolbar.apply {
+            navigationIcon = AppCompatResources.getDrawable(
+                requireContext(),
+                R.drawable.ic_baseline_arrow_back_24
+            )
+            setNavigationOnClickListener { findNavController().navigateUp() }
+        }
         initSearchView()
         binding.root
     }
@@ -100,13 +108,6 @@ class SearchFragment : Fragment() {
                 tab?.let {
                     currentTabPosition = it.position
                 }
-//                tab?.let {
-//                    if (currentTabPosition != it.position) {
-//                        currentTabPosition = it.position
-//                        if (lastRequest.isNotEmpty())
-//                            onRequest(lastRequest)
-//                    }
-//                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {

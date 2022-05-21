@@ -18,6 +18,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.ActivityMainBinding
 import com.example.twitchclient.ui.followings.FollowingsFragment
@@ -33,23 +34,13 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    companion object {
-        private const val USER_PREFERENCES = "USER_PREFERENCES"
-        private const val USER_ACCESS_TOKEN_VALUE = "USER_ACCESS_TOKEN_VALUE"
-    }
-
     private lateinit var binding: ActivityMainBinding
-
-    private lateinit var preferences: SharedPreferences
-
-    private var navOption = NavOption.OPTION_DEFAULT
 
     private val destinationListener =
         NavController.OnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
-                R.id.streamFragment -> {
-                    hideBottomNav()
-                }
+                R.id.streamFragment -> hideBottomNav()
+                R.id.authFragment -> hideBottomNav()
                 else -> showBottomNav()
             }
         }
@@ -65,8 +56,6 @@ class MainActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
-        putAccessToken("tthzw65o8p57eb80y0jwkr6lfcg3rt")
     }
 
     override fun onStart() {
@@ -78,29 +67,18 @@ class MainActivity : DaggerAppCompatActivity() {
         findNavController(R.id.nav_host_fragment_container).navigateUp()
     }
 
-    private fun init() {
-        preferences = getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
-    }
-
-    private fun hideBottomNav(){
+    private fun hideBottomNav() {
         binding.bottomNavigationView.visibility = View.GONE
     }
 
-    private fun showBottomNav(){
+    private fun showBottomNav() {
         binding.bottomNavigationView.visibility = View.VISIBLE
     }
 
     private fun setupNavigation() {
-        setSupportActionBar(binding.toolbar)
         binding.bottomNavigationView.setupWithNavController(findNavController(R.id.nav_host_fragment_container))
-        findNavController(R.id.nav_host_fragment_container).addOnDestinationChangedListener(destinationListener)
+        findNavController(R.id.nav_host_fragment_container).addOnDestinationChangedListener(
+            destinationListener
+        )
     }
-
-    fun putAccessToken(token: String) {
-        preferences.edit()
-            .putString(USER_ACCESS_TOKEN_VALUE, token)
-            .apply()
-    }
-
-    fun getAccessToken(): String? = preferences.getString(USER_ACCESS_TOKEN_VALUE, null)
 }

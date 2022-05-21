@@ -1,23 +1,21 @@
-package com.example.twitchclient.ui.followings
+package com.example.twitchclient.ui.followings.recycler
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.twitchclient.domain.entity.search.ChannelInfo
 import com.example.twitchclient.domain.entity.streams.StreamData
-import com.example.twitchclient.domain.entity.streams.StreamItem
-import com.example.twitchclient.ui.search.channels.ChannelDiffUtils
 
 class StreamAdapter(
     private val streams: ArrayList<StreamData>,
     private val onItemClicked: (StreamData) -> Unit,
+    private val onChannelAvatarClicked: (StreamData) -> Unit,
     private val onNextStreams: () -> Unit
 ) : RecyclerView.Adapter<StreamHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): StreamHolder = StreamHolder.create(parent, onItemClicked)
+    ): StreamHolder = StreamHolder.create(parent, onItemClicked, onChannelAvatarClicked)
 
     override fun onBindViewHolder(holder: StreamHolder, position: Int) {
         holder.bind(streams[position])
@@ -31,16 +29,6 @@ class StreamAdapter(
         val diffResult = DiffUtil.calculateDiff(callback)
         diffResult.dispatchUpdatesTo(this)
         streams.clear()
-        streams.addAll(newData)
-    }
-
-    fun nextStreams(newData: ArrayList<StreamData>) {
-        var newList = arrayListOf<StreamData>()
-        newList.addAll(streams)
-        newList.addAll(newData)
-        val callback = StreamDiffUtils(streams, newList)
-        val diffResult = DiffUtil.calculateDiff(callback)
-        diffResult.dispatchUpdatesTo(this)
         streams.addAll(newData)
     }
 
