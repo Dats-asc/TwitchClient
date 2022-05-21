@@ -1,6 +1,8 @@
 package com.example.twitchclient.di.module
 
 import android.content.Context
+import android.content.SharedPreferences
+import com.example.twitchclient.C
 import com.example.twitchclient.MyApp
 import com.example.twitchclient.data.api.mapper.BttvFfzMapper
 import com.example.twitchclient.data.api.mapper.TwitchMapper
@@ -18,11 +20,19 @@ class AppModule {
 
     @Provides
     @Singleton
+    fun provideSharedPreferences(app: MyApp): SharedPreferences {
+        return with(app.applicationContext) {
+            getSharedPreferences(C.USER_PREFERENCES, Context.MODE_PRIVATE)
+        }
+    }
+
+    @Provides
+    @Singleton
     fun provideAccessToken(
-        context: Context
-    ): String? =
-        context.getSharedPreferences("USER_PREFERENCES", Context.MODE_PRIVATE)
-            .getString("USER_ACCESS_TOKEN_VALUE", "")
+        app: MyApp
+    ): String =
+        app.applicationContext.getSharedPreferences(C.USER_PREFERENCES, Context.MODE_PRIVATE)
+            .getString(C.USER_ACCESS_TOKEN_VALUE, "").orEmpty()
 
     @Provides
     @Singleton
