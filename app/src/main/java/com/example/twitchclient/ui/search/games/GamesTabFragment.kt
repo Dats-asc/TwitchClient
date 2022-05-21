@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FragmentGamesTabBinding
 import com.example.twitchclient.domain.entity.search.GameInfo
@@ -76,8 +79,11 @@ class GamesTabFragment : Fragment(), SearchableTab {
     private fun initAdapter() {
         gamesAdapter = GamesAdapter(
             arrayListOf(),
-            onItemClick = {
-                //TODO
+            onItemClick = { gameId ->
+                findNavController().navigate(
+                    R.id.action_action_search_to_gameFragment,
+                    bundleOf(C.GAME_ID to gameId)
+                )
             },
             onNextGames = {
                 viewModel.getNextGames()

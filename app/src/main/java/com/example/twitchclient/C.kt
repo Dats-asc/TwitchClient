@@ -6,4 +6,8 @@ object C {
     const val TWITCH_CHAT_WSS_SERVER = "wss://irc-ws.chat.twitch.tv:443"
     const val BROADCASTER_LOGIN = "BROADCASTER_LOGIN"
     const val BROADCASTER_ID = "BROADCASTER_ID"
+    const val GAME_ID = "GAME_ID"
+    const val USER_PREFERENCES = "USER_PREFERENCES"
+    const val USER_ACCESS_TOKEN_VALUE = "USER_ACCESS_TOKEN_VALUE"
+    const val USER_ID = "USER_ID"
 }

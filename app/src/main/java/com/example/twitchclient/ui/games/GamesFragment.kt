@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.data.api.mapper.TwitchMapper
 import com.example.twitchclient.data.repository.TwitchRepositoryImpl
@@ -41,16 +43,6 @@ class GamesFragment : Fragment() {
     ): View? = GamesFragmentBinding.inflate(inflater, container, false).let {
         binding = it
         with(binding.toolbar) {
-            setupWithNavController(
-                findNavController(),
-                AppBarConfiguration(
-                    setOf(
-                        R.id.navigation_followings,
-                        R.id.navigation_popular,
-                        R.id.navigation_games
-                    )
-                )
-            )
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.action_search -> {
@@ -99,8 +91,11 @@ class GamesFragment : Fragment() {
     private fun initAdapter() {
         gamesAdapter = GamesAdapter(
             arrayListOf(),
-            onItemClick = {
-
+            onItemClick = { gameId ->
+                findNavController().navigate(
+                    R.id.action_navigation_games_to_gameFragment,
+                    bundleOf(C.GAME_ID to gameId)
+                )
             },
             onNextGames = {
                 viewModel.getNextGames()
