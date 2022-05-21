@@ -33,6 +33,16 @@
         <item name="android:background">#4d4d4d</item>
     </style>
 
+    <style name="ChannelInfoText">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowRadius">10</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Button.SignIn" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/onSecondary</item>
+    </style>
+
     <style name="MainFragmentStyle">
         <item name="android:background">@color/onPrimary</item>
     </style>
