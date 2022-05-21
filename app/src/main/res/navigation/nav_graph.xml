@@ -3,30 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/navigation_followings">
+    app:startDestination="@id/startFragment">
 
     <fragment
         android:id="@+id/navigation_followings"
         android:name="com.example.twitchclient.ui.followings.FollowingsFragment"
-        tools:layout="@layout/followings_fragment" >
+        tools:layout="@layout/followings_fragment">
         <action
             android:id="@+id/action_followingsFragment_to_streamFragment"
             app:destination="@id/streamFragment"
             app:enterAnim="@anim/enter_from_right"
-            app:launchSingleTop="false"
             app:popExitAnim="@anim/exit_to_right"
-            app:popUpTo="@id/navigation_followings"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@id/navigation_followings" />
         <action
             android:id="@+id/action_navigation_followings_to_action_search"
             app:destination="@id/action_search"
             app:launchSingleTop="true"
             app:popUpTo="@id/navigation_followings" />
+        <action
+            android:id="@+id/action_navigation_followings_to_startFragment"
+            app:destination="@id/startFragment"
+            app:launchSingleTop="true"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_navigation_followings_to_channelDetailFragment"
+            app:destination="@id/channelDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_popular"
         android:name="com.example.twitchclient.ui.popular.PopularFragment"
-        tools:layout="@layout/popular_fragment" >
+        tools:layout="@layout/popular_fragment">
         <action
             android:id="@+id/action_navigation_popular_to_action_search"
             app:destination="@id/action_search"
@@ -40,15 +46,21 @@
             app:popExitAnim="@anim/stream_pop_exit"
             app:popUpTo="@id/navigation_popular"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_navigation_popular_to_channelDetailFragment"
+            app:destination="@id/channelDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_games"
         android:name="com.example.twitchclient.ui.games.GamesFragment"
-        tools:layout="@layout/games_fragment" >
+        tools:layout="@layout/games_fragment">
         <action
             android:id="@+id/action_navigation_games_to_action_search"
             app:destination="@id/action_search"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_navigation_games_to_gameFragment"
+            app:destination="@id/gameFragment" />
     </fragment>
     <fragment
         android:id="@+id/streamFragment"
@@ -57,5 +69,53 @@
     <fragment
         android:id="@+id/action_search"
         android:name="com.example.twitchclient.ui.search.SearchFragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_action_search_to_channelDetailFragment"
+            app:destination="@id/channelDetailFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:popExitAnim="@anim/exit_to_right" />
+        <action
+            android:id="@+id/action_action_search_to_gameFragment"
+            app:destination="@id/gameFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:popExitAnim="@anim/exit_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/channelDetailFragment"
+        android:name="com.example.twitchclient.ui.channel.ChannelDetailFragment"
+        android:label="fragment_channel_detail"
+        tools:layout="@layout/fragment_channel_detail" />
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.example.twitchclient.ui.game.GameFragment"
+        android:label="fragment_game"
+        tools:layout="@layout/fragment_game">
+        <action
+            android:id="@+id/action_gameFragment_to_action_search"
+            app:destination="@id/action_search" />
+        <action
+            android:id="@+id/action_gameFragment_to_streamFragment"
+            app:destination="@id/streamFragment" />
+        <action
+            android:id="@+id/action_gameFragment_to_channelDetailFragment"
+            app:destination="@id/channelDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.example.twitchclient.ui.auth.AuthFragment"
+        android:label="auth_fragment"
+        tools:layout="@layout/auth_fragment" />
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.twitchclient.ui.start.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start">
+        <action
+            android:id="@+id/action_startFragment_to_authFragment"
+            app:destination="@id/authFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_navigation_followings"
+            app:destination="@id/navigation_followings" />
+    </fragment>
 </navigation>
