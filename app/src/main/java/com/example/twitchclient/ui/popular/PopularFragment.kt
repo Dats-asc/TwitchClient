@@ -8,14 +8,11 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.PopularFragmentBinding
 import com.example.twitchclient.domain.entity.streams.StreamData
-import com.example.twitchclient.domain.entity.streams.Streams
-import com.example.twitchclient.ui.followings.StreamAdapter
+import com.example.twitchclient.ui.followings.recycler.StreamAdapter
 import com.example.twitchclient.ui.main.MainActivity
 import com.google.android.material.snackbar.Snackbar
 
@@ -35,16 +32,6 @@ class PopularFragment : Fragment() {
     ): View? = PopularFragmentBinding.inflate(inflater, container, false).let {
         binding = PopularFragmentBinding.inflate(inflater, container, false)
         with(binding.toolbar) {
-            setupWithNavController(
-                findNavController(),
-                AppBarConfiguration(
-                    setOf(
-                        R.id.navigation_followings,
-                        R.id.navigation_popular,
-                        R.id.navigation_games
-                    )
-                )
-            )
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.action_search -> {
@@ -90,14 +77,14 @@ class PopularFragment : Fragment() {
         streamAdapter = StreamAdapter(
             arrayListOf(),
             onItemClicked = { streamData ->
-//                findNavController().navigate(
-//                    R.id.action_navigation_popular_to_streamFragment,
-//                    bundleOf(C.BROADCASTER_LOGIN to streamData.user_login)
-//                )
-
                 findNavController().navigate(
                     R.id.action_navigation_popular_to_streamFragment,
                     bundleOf(C.BROADCASTER_LOGIN to streamData.user_login)
+                )
+            }, onChannelAvatarClicked = { streamData ->
+                findNavController().navigate(
+                    R.id.action_navigation_popular_to_channelDetailFragment,
+                    bundleOf(C.USER_ID to streamData.id)
                 )
             },
             onNextStreams = {

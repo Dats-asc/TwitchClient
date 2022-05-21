@@ -44,13 +44,16 @@
         app:layout_constraintTop_toTopOf="@id/iv_circle"
         tools:text="1.5 тыс." />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_streamer_avatar"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginStart="16dp"
+        android:background="@drawable/shapeable_imageview_background"
         app:layout_constraintStart_toEndOf="@id/iv_stream_preview"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+        tools:src="@drawable/ic_baseline_circle_24" />
 
     <TextView
         android:id="@+id/tv_channel_name"

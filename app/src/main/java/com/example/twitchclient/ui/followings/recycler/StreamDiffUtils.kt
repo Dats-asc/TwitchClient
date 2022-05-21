@@ -1,4 +1,4 @@
-package com.example.twitchclient.ui.followings
+package com.example.twitchclient.ui.followings.recycler
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.twitchclient.domain.entity.streams.StreamData
