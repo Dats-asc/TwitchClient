@@ -32,14 +32,11 @@ class ChannelsAdapter(
         channels.addAll(newData)
     }
 
-    fun addNewChannels(newData: ArrayList<ChannelInfo>) {
-        var newList = arrayListOf<ChannelInfo>()
-        newList.addAll(channels)
-        newList.addAll(newData)
-        val callback = ChannelDiffUtils(channels, newList)
+    fun clear(){
+        channels.clear()
+        val callback = ChannelDiffUtils(channels, arrayListOf())
         val diffResult = DiffUtil.calculateDiff(callback)
         diffResult.dispatchUpdatesTo(this)
-        channels.addAll(newData)
     }
 
     override fun getItemCount(): Int = channels.size

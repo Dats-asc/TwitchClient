@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_baseline_search_24"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
-        android:title="Поиск"/>
+        android:title="Поиск"
+        app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_sign_in"
-        android:title="Войти в аккаунт"
-        app:showAsAction="collapseActionView"
-        app:actionViewClass="com.google.android.material.appbar.CollapsingToolbarLayout" />
-
-    <item
-        android:id="@+id/action_sign_out"
-        android:title="Выйти из аккаунта"
-        app:showAsAction="collapseActionView"
-        app:actionViewClass="com.google.android.material.appbar.CollapsingToolbarLayout" />
 </menu>

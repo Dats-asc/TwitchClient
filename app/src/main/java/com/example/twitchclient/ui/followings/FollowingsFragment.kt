@@ -12,14 +12,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FollowingsFragmentBinding
-import com.example.twitchclient.domain.entity.streams.Streams
+import com.example.twitchclient.domain.entity.streams.StreamData
+import com.example.twitchclient.ui.followings.recycler.StreamAdapter
 import com.example.twitchclient.ui.main.MainActivity
-import com.example.twitchclient.ui.navigation.NavOption
-import com.example.twitchclient.ui.navigation.Navigator
-import com.example.twitchclient.ui.navigation.navigator
-import com.example.twitchclient.ui.stream.StreamFragment
 import com.google.android.material.snackbar.Snackbar
-import javax.inject.Singleton
 
 class FollowingsFragment : Fragment() {
 
@@ -36,27 +32,49 @@ class FollowingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = FollowingsFragmentBinding.inflate(inflater, container, false).let {
         binding = FollowingsFragmentBinding.inflate(inflater, container, false)
-        binding.root
+        with(binding.toolbar) {
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.action_search -> {
+                        findNavController().navigate(R.id.action_navigation_followings_to_action_search)
+                        true
+                    }
+                    R.id.action_auth -> {
+                        viewModel.logout()
+                        findNavController().navigate(R.id.action_navigation_followings_to_startFragment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            binding.root
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.savedData?.let {
-            initAdapter(it)
-        } ?: kotlin.run {
-            initObservers()
-            binding.progressbar.visibility = View.VISIBLE
-            viewModel.getFollowedStreams()
-        }
+        if (viewModel.isAuthorized) {
+            initIfAuthorized()
+        } else initIfNotAuthorized()
+    }
+
+    private fun initIfAuthorized() {
+        initAdapter()
+        initObservers()
+        binding.progressbar.visibility = View.VISIBLE
+        viewModel.getFollowedStreams()
+    }
+
+    private fun initIfNotAuthorized() {
+        binding.followMessage.visibility = View.VISIBLE
+        binding.progressbar.visibility = View.GONE
     }
 
     private fun initObservers() {
-        viewModel.queryStreams.observe(requireActivity()) {
+        viewModel.queryStreams.observe(viewLifecycleOwner) {
             it.fold(
                 onSuccess = { streams ->
-                    initAdapter(streams)
-                    viewModel.savedData = streams
-                    binding.progressbar.visibility = View.GONE
+                    onStreamsLoad(streams.streams)
                 }, onFailure = {
                     Snackbar.make(binding.root, "Something go wrong", Snackbar.LENGTH_LONG).show()
                     Log.e("", it.message.toString())
@@ -65,13 +83,29 @@ class FollowingsFragment : Fragment() {
         }
     }
 
-    private fun initAdapter(data: Streams){
-        streamAdapter = StreamAdapter(data.data) { streamData ->
-            findNavController().navigate(
-                R.id.action_followingsFragment_to_streamFragment,
-                bundleOf(C.BROADCASTER_LOGIN to streamData.user_login)
-            )
-        }
+    private fun onStreamsLoad(streams: ArrayList<StreamData>) {
+        streamAdapter?.updateData(streams)
+        binding.progressbar.visibility = View.GONE
+    }
+
+    private fun initAdapter() {
+        streamAdapter = StreamAdapter(
+            arrayListOf(),
+            onItemClicked = { streamData ->
+                findNavController().navigate(
+                    R.id.action_followingsFragment_to_streamFragment,
+                    bundleOf(C.BROADCASTER_LOGIN to streamData.user_login)
+                )
+            },
+            onChannelAvatarClicked = { streamData ->
+                findNavController().navigate(
+                    R.id.action_navigation_followings_to_channelDetailFragment,
+                    bundleOf(C.USER_ID to streamData.id)
+                )
+            },
+            onNextStreams = {
+
+            })
         binding.rvStreams.adapter = streamAdapter
     }
 

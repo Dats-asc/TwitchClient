@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MainFragmentStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.search.channels.ChannelsTabFragment">
@@ -20,27 +21,11 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_channel" />
 
-        <TextView
-            android:id="@+id/tv_nothing_find_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ничего не найдено"
-            android:textColor="@color/lightGray"
-            android:textSize="24dp"
-            android:textStyle="italic"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
-
-
         <ProgressBar
             android:id="@+id/progressbar"
+            style="@style/Progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Progressbar"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,9 +35,9 @@
 
         <ProgressBar
             android:id="@+id/recyclerProgressbar"
+            style="@style/Progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Progressbar"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

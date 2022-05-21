@@ -17,6 +17,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
+import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.ActivityMainBinding
 import com.example.twitchclient.ui.followings.FollowingsFragment
@@ -30,26 +32,16 @@ import kotlinx.coroutines.launch
 import okhttp3.internal.wait
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity(), Navigator {
-
-    companion object {
-        private const val USER_PREFERENCES = "USER_PREFERENCES"
-        private const val USER_ACCESS_TOKEN_VALUE = "USER_ACCESS_TOKEN_VALUE"
-    }
+class MainActivity : DaggerAppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private lateinit var preferences: SharedPreferences
-
-    private var navOption = NavOption.OPTION_DEFAULT
-
-    private lateinit var navController: NavController
 
     private val destinationListener =
         NavController.OnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
-                R.id.streamFragment -> hideBtmNavAndToolbar()
-                else -> showBtmNavAndToolbar()
+                R.id.streamFragment -> hideBottomNav()
+                R.id.authFragment -> hideBottomNav()
+                else -> showBottomNav()
             }
         }
 
@@ -64,8 +56,6 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
-        putAccessToken("tthzw65o8p57eb80y0jwkr6lfcg3rt")
     }
 
     override fun onStart() {
@@ -73,149 +63,22 @@ class MainActivity : DaggerAppCompatActivity(), Navigator {
         setupNavigation()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
-
-        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchItem?.actionView = SearchView(this, null, R.style.SearchView).also {
-            it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    if (newText.orEmpty().isNotEmpty()){
-                        lifecycleScope.launch {
-                            val searchFragment =
-                                supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container)?.childFragmentManager?.let {
-                                    it.fragments[0] as SearchFragment
-                                }
-                            searchFragment?.onQueryCall(newText.orEmpty())
-                        }
-                    }
-                    return true
-                }
-
-            })
-        }
-        val searchView: SearchView = searchItem?.actionView as SearchView
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-
-        return super.onCreateOptionsMenu(menu)
+    override fun onBackPressed() {
+        findNavController(R.id.nav_host_fragment_container).navigateUp()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(
-            item,
-            navController
-        ) || super.onOptionsItemSelected(item)
-    }
-
-
-    private fun init() {
-        preferences = getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
-        setupToolbar()
-    }
-
-    private fun setupNavigation() {
-        navController = findNavController(R.id.nav_host_fragment_container)
-        navController.addOnDestinationChangedListener(destinationListener)
-        NavigationUI.setupWithNavController(
-            binding.bottomNavigationView,
-            navController
-        )
-        NavigationUI.setupActionBarWithNavController(
-            this,
-            navController,
-            AppBarConfiguration(
-                setOf(
-                    R.id.navigation_followings,
-                    R.id.navigation_popular,
-                    R.id.navigation_games
-                )
-            )
-        )
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    private fun hideBtmNavAndToolbar() {
-        binding.toolbar.visibility = View.GONE
+    private fun hideBottomNav() {
         binding.bottomNavigationView.visibility = View.GONE
     }
 
-    private fun showBtmNavAndToolbar() {
-        binding.toolbar.visibility = View.VISIBLE
+    private fun showBottomNav() {
         binding.bottomNavigationView.visibility = View.VISIBLE
     }
 
-    private fun updateToolbar() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayShowHomeEnabled(true)
-        } else {
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            supportActionBar?.setDisplayShowHomeEnabled(false)
-        }
-
-
-        when (navOption) {
-            NavOption.OPTION_HIDE_TOOLBAR_AND_BOTTOM_NAV_VIEW -> {
-                binding.bottomNavigationView.visibility = View.GONE
-                supportActionBar?.hide()
-            }
-            NavOption.OPTION_DEFAULT -> {
-                binding.bottomNavigationView.visibility = View.VISIBLE
-                supportActionBar?.show()
-            }
-        }
+    private fun setupNavigation() {
+        binding.bottomNavigationView.setupWithNavController(findNavController(R.id.nav_host_fragment_container))
+        findNavController(R.id.nav_host_fragment_container).addOnDestinationChangedListener(
+            destinationListener
+        )
     }
-
-    override fun pushFragment(bundle: Bundle?, fragId: Int) {
-        val options = NavOptions.Builder()
-            .setLaunchSingleTop(false)
-            .build()
-        navController.navigate(fragId, bundle, options)
-
-    }
-
-    override fun backToStart() {
-        navOption = NavOption.OPTION_DEFAULT
-        updateToolbar()
-        with(supportFragmentManager) {
-            popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            beginTransaction().run {
-                replace(R.id.nav_host_fragment_container, FollowingsFragment())
-                commit()
-            }
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    override fun goBack() {
-        onBackPressed()
-    }
-
-    override fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().run {
-            replace(R.id.nav_host_fragment_container, fragment)
-            commit()
-        }
-    }
-
-    fun putAccessToken(token: String) {
-        preferences.edit()
-            .putString(USER_ACCESS_TOKEN_VALUE, token)
-            .apply()
-    }
-
-    fun getAccessToken(): String? = preferences.getString(USER_ACCESS_TOKEN_VALUE, null)
 }

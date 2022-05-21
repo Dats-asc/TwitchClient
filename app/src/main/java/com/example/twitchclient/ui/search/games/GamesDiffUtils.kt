@@ -17,6 +17,7 @@ class GamesDiffUtils(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return (oldList[oldItemPosition].id == newList[newItemPosition].id)
+        return ((oldList[oldItemPosition].id == newList[newItemPosition].id) ||
+                (oldList[oldItemPosition].name == newList[newItemPosition].name))
     }
 }

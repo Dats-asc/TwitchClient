@@ -7,4 +7,5 @@ class SearchViewModel @Inject constructor(
 
 ) : ViewModel() {
 
+    var lastRequest = ""
 }

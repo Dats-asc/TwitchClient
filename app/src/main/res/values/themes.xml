@@ -19,7 +19,13 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:background">#4d4d4d</item>
-        <item name="theme">@style/ThemeOverlay.Material3.Dark</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark</item>
+    </style>
+
+    <style name="TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextColor">@color/lightGray</item>
+        <item name="tabIndicatorColor">@color/lightGray</item>
+        <item name="tabBackground">@color/onPrimary</item>
     </style>
 
     <style name="BottomNavigation">
@@ -27,9 +33,18 @@
         <item name="android:background">#4d4d4d</item>
     </style>
 
+    <style name="ChannelInfoText">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowRadius">10</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Button.SignIn" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/onSecondary</item>
+    </style>
+
     <style name="MainFragmentStyle">
-        <item name="android:background">#666666</item>
-        <item name="android:padding">8dp</item>
+        <item name="android:background">@color/onPrimary</item>
     </style>
 
     <style name="Progressbar" parent="Widget.AppCompat.ProgressBar">
@@ -50,16 +65,5 @@
     <style name="SearchView" parent="Widget.AppCompat.Light.SearchView">
         <item name="android:background">@color/black</item>
         <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="Widget.App.TabLayout" parent="Widget.MaterialComponents.TabLayout">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TabLayout</item>
-        <item name="tabTextAppearance">@style/Widget.Material3.Button</item>
-    </style>
-
-    <style name="ThemeOverlay.App.TabLayout" parent="">
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorSurface">@color/black</item>
-        <item name="colorOnSurface">@color/black</item>
     </style>
 </resources>

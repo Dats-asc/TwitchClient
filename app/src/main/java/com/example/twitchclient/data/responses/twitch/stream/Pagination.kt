@@ -1,3 +1,5 @@
 package com.example.twitchclient.data.responses.twitch.stream
 
-class Pagination
+data class Pagination(
+    val cursor: String?
+)

@@ -8,7 +8,7 @@ import com.example.twitchclient.domain.entity.search.GameInfo
 class GamesAdapter(
     private val games: ArrayList<GameInfo>,
     private val onItemClick: (String) -> Unit,
-    private val onNextChannels: () -> Unit
+    private val onNextGames: () -> Unit
 ) : RecyclerView.Adapter<GamesHolder>() {
 
     override fun onCreateViewHolder(
@@ -19,7 +19,7 @@ class GamesAdapter(
     override fun onBindViewHolder(holder: GamesHolder, position: Int) {
         holder.bind(games[position])
         if (position < games.size - 1 && position > games.size - 3) {
-            onNextChannels()
+            onNextGames()
         }
     }
 
@@ -31,21 +31,11 @@ class GamesAdapter(
         games.addAll(newData)
     }
 
-    fun addNewGames(newData: ArrayList<GameInfo>) {
-        var newList = arrayListOf<GameInfo>()
-        newList.addAll(games)
-        newList.addAll(newData)
-        val callback = GamesDiffUtils(games, newList)
-        val diffResult = DiffUtil.calculateDiff(callback)
-        diffResult.dispatchUpdatesTo(this)
-        games.addAll(newData)
-    }
-
-    fun clearData(){
-        val callback = GamesDiffUtils(arrayListOf(), arrayListOf())
-        val diffResult = DiffUtil.calculateDiff(callback)
-        diffResult.dispatchUpdatesTo(this)
+    fun clear() {
         games.clear()
+        val callback = GamesDiffUtils(games, arrayListOf())
+        val diffResult = DiffUtil.calculateDiff(callback)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun getItemCount(): Int = games.size

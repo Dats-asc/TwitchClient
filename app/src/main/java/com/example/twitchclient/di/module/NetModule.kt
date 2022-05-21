@@ -69,7 +69,7 @@ class NetModule {
 
     @Provides
     @Singleton
-    fun api(
+    fun twitchApi(
         okHttpClient: OkHttpClient,
         provideGsonConverter: GsonConverterFactory
     ): TwitchApi =

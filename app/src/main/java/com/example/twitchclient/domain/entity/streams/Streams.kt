@@ -1,5 +1,6 @@
 package com.example.twitchclient.domain.entity.streams
 
 class Streams(
-    val `data`: List<StreamData>
+    val streams: ArrayList<StreamData>,
+    val cursor: String
 )

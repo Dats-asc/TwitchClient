@@ -6,7 +6,10 @@
         <entry key="app/src/main/res/drawable/ic_baseline_games_24.xml" value="0.1945" />
         <entry key="app/src/main/res/drawable/ic_baseline_groups_24.xml" value="0.1945" />
         <entry key="app/src/main/res/drawable/item_stream_background.xml" value="0.1945" />
+        <entry key="app/src/main/res/drawable/item_video_background.xml" value="0.187" />
         <entry key="app/src/main/res/drawable/player_background.xml" value="0.188" />
+        <entry key="app/src/main/res/drawable/shapeable_imageview_background.xml" value="0.187" />
+        <entry key="app/src/main/res/drawable/sign_in_button_background.xml" value="0.187" />
         <entry key="app/src/main/res/layout-v23/item_stream.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_authorization.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3098958333333333" />
@@ -15,19 +18,27 @@
         <entry key="app/src/main/res/layout/custom_exo_playback_control_view.xml" value="0.27314814814814814" />
         <entry key="app/src/main/res/layout/followings_fragment.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/fragment_auth.xml" value="0.2953125" />
+        <entry key="app/src/main/res/layout/fragment_channel_detail.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/fragment_channels_tab.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_game.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_games_tab.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_start.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/games_fragment.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/item_channel.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/item_chat_message.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/item_game.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/item_stream.xml" value="0.2953125" />
+        <entry key="app/src/main/res/layout/item_stream.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_stream_background.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/item_video.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/popular_fragment.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/stream_fragment.xml" value="0.2953125" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.2953125" />
         <entry key="app/src/main/res/menu/bottom_nav_meny.xml" value="0.2953125" />
+        <entry key="app/src/main/res/menu/followings_toolbar_menu.xml" value="0.2953125" />
+        <entry key="app/src/main/res/menu/search_toolbar.xml" value="0.2953125" />
+        <entry key="app/src/main/res/menu/search_toolbar_menu.xml" value="0.2953125" />
+        <entry key="app/src/main/res/menu/search_toolbar_meny.xml" value="2.025" />
         <entry key="app/src/main/res/menu/toolbar_menu.xml" value="0.2953125" />
         <entry key="app/src/main/res/xml/searchable.xml" value="0.2953125" />
       </map>

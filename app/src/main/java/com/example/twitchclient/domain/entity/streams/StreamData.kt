@@ -13,4 +13,5 @@ data class StreamData(
     val started_at: String,
     val language: String,
     val thumbnail_url: String,
+    val profile_image: String
 )
