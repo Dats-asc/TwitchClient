@@ -15,6 +15,8 @@ import com.example.twitchclient.ui.search.channels.ChannelsTabViewModel
 import com.example.twitchclient.ui.search.games.GamesTabViewModel
 import com.example.twitchclient.ui.start.StartViewModel
 import com.example.twitchclient.ui.stream.StreamViewModel
+import com.example.twitchclient.ui.video.VideoViewModel
+import com.example.twitchclient.ui.videos.VideosViewModel
 import com.example.twitchclient.utils.MyViewModelFactory
 import dagger.Binds
 import dagger.Module
@@ -110,5 +112,19 @@ interface ViewModelModule {
     @ViewModelKey(StartViewModel::class)
     fun bindStartViewModel(
         viewModel: StartViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(VideoViewModel::class)
+    fun bindVideoViewModel(
+        viewModel: VideoViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(VideosViewModel::class)
+    fun bindVideosViewModel(
+        viewModel: VideosViewModel
     ): ViewModel
 }

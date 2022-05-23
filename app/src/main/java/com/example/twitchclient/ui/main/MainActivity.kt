@@ -41,6 +41,7 @@ class MainActivity : DaggerAppCompatActivity() {
             when (destination.id) {
                 R.id.streamFragment -> hideBottomNav()
                 R.id.authFragment -> hideBottomNav()
+                R.id.videoFragment -> hideBottomNav()
                 else -> showBottomNav()
             }
         }

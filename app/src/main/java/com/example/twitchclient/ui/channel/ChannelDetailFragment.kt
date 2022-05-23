@@ -2,15 +2,16 @@ package com.example.twitchclient.ui.channel
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitchclient.C
+import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FragmentChannelDetailBinding
 import com.example.twitchclient.domain.entity.user.UserDetail
 import com.example.twitchclient.domain.entity.videos.VideoInfo
@@ -64,6 +65,30 @@ class ChannelDetailFragment : Fragment() {
                 Toast.makeText(requireActivity(), it.message.orEmpty(), Toast.LENGTH_SHORT).show()
             })
         }
+        viewModel.videosDb.observe(viewLifecycleOwner) {
+            it.fold(onSuccess = {
+                it
+                val a = 0
+            }, onFailure = {
+
+            }
+            )
+        }
+        viewModel.isSaved.observe(viewLifecycleOwner) { videoIsSaved ->
+            if (videoIsSaved) {
+                Toast.makeText(requireContext(), "Видео уже сохранено", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Видео сохранено", Toast.LENGTH_SHORT).show()
+            }
+        }
+        viewModel.test.observe(viewLifecycleOwner) {
+            it.fold(onSuccess = {
+                it
+            }, onFailure = {
+                it.message
+                val a = 0
+            })
+        }
     }
 
     private fun onVideoResponse(videos: ArrayList<VideoInfo>) {
@@ -90,20 +115,43 @@ class ChannelDetailFragment : Fragment() {
                 tvViewersCount.text = "Зрителей: ${user.viewer_count}"
                 tvStreamTime.text = "Время начала: ${user.started_at.split("T")[1]}"
             }
+            btnWatch.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_channelDetailFragment_to_streamFragment,
+                    bundleOf(C.BROADCASTER_LOGIN to user.login)
+                )
+            }
         }
     }
 
     private fun initAdapter() {
         videoAdapter = VideoAdapter(
             arrayListOf(),
-            onItemClicked = {
-
+            onItemClicked = { videoInfo ->
+                findNavController().navigate(
+                    R.id.action_channelDetailFragment_to_videoFragment,
+                    bundleOf(C.VIDEO_ID to videoInfo.id)
+                )
             },
-            onNextStreams = {
+            onNextVideo = {
                 viewModel.getNextVideos(userId)
                 binding.recyclerProgressbar.visibility = View.VISIBLE
+            },
+            onItemMenuClicked = { videoInfo, view ->
+                showPopup(view, videoInfo)
             }
         )
         binding.rvVideos.adapter = videoAdapter
+    }
+
+    private fun showPopup(v: View, video: VideoInfo) {
+        val popup = PopupMenu(requireActivity(), v)
+        popup.setOnMenuItemClickListener {
+            viewModel.addVideo(video)
+            true
+        }
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.video_item_menu, popup.menu)
+        popup.show()
     }
 }
