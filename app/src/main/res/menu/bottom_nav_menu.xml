@@ -17,4 +17,10 @@
         android:icon="@drawable/ic_baseline_subscriptions_24"
         android:enabled="true"
         android:title="@string/title_followings" />
+
+    <item
+        android:id="@+id/navigation_videos"
+        android:icon="@drawable/ic_baseline_download_24"
+        android:enabled="true"
+        android:title="@string/title_videos" />
 </menu>

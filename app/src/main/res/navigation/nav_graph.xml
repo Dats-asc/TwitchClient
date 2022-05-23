@@ -85,7 +85,14 @@
         android:id="@+id/channelDetailFragment"
         android:name="com.example.twitchclient.ui.channel.ChannelDetailFragment"
         android:label="fragment_channel_detail"
-        tools:layout="@layout/fragment_channel_detail" />
+        tools:layout="@layout/fragment_channel_detail" >
+        <action
+            android:id="@+id/action_channelDetailFragment_to_streamFragment"
+            app:destination="@id/streamFragment" />
+        <action
+            android:id="@+id/action_channelDetailFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.example.twitchclient.ui.game.GameFragment"
@@ -118,4 +125,14 @@
             android:id="@+id/action_startFragment_to_navigation_followings"
             app:destination="@id/navigation_followings" />
     </fragment>
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.example.twitchclient.ui.video.VideoFragment"
+        android:label="fragment_video"
+        tools:layout="@layout/fragment_video" />
+    <fragment
+        android:id="@+id/navigation_videos"
+        android:name="com.example.twitchclient.ui.videos.VideosFragment"
+        android:label="fragment_videos"
+        tools:layout="@layout/fragment_videos" />
 </navigation>

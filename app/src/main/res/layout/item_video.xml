@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/tv_video_description"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="8dp"
@@ -27,6 +27,7 @@
         android:textSize="16sp"
         android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_menu"
         app:layout_constraintTop_toBottomOf="@id/video_preview"
         tools:text="dsadasdasd" />
 
@@ -68,6 +69,16 @@
         app:layout_constraintBottom_toBottomOf="@id/video_preview"
         app:layout_constraintEnd_toEndOf="@id/video_preview"
         tools:text="212122" />
+
+    <ImageView
+        android:id="@+id/iv_menu"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_baseline_more_vert_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/video_preview" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
