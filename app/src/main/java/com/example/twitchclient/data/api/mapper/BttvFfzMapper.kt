@@ -3,6 +3,8 @@ package com.example.twitchclient.data.api.mapper
 import com.example.twitchclient.data.responses.bttv.BttvChanelEmotesResponse
 import com.example.twitchclient.data.responses.bttv.BttvGlobalEmotesResponse
 import com.example.twitchclient.data.responses.ffz.FfzChannelEmotesResponse
+import com.example.twitchclient.domain.entity.emotes.EmoteGeneral
+import com.example.twitchclient.domain.entity.emotes.EmotesGeneral
 import com.example.twitchclient.domain.entity.emotes.bttv.BttvChanelEmotes
 import com.example.twitchclient.domain.entity.emotes.bttv.BttvFfzEmote
 import com.example.twitchclient.domain.entity.emotes.bttv.BttvFfzGlobalEmotes
@@ -58,7 +60,7 @@ class BttvFfzMapper {
         return BttvChanelEmotes(channelEmotes = mappedList)
     }
 
-    fun mapFfzChannelEmotesResponse(response: FfzChannelEmotesResponse): FfzChannelEmotes{
+    fun mapFfzChannelEmotesResponse(response: FfzChannelEmotesResponse): FfzChannelEmotes {
         val mappedList = arrayListOf<BttvFfzEmote>()
         response.forEach { ffzEmote ->
             mappedList.add(
@@ -74,5 +76,51 @@ class BttvFfzMapper {
             )
         }
         return FfzChannelEmotes(mappedList)
+    }
+
+    fun mapEmotes(
+        bttvGlobalEmotes: BttvGlobalEmotesResponse,
+        bttvChannelEmotes: BttvChanelEmotesResponse,
+        ffzChannelEmotes: FfzChannelEmotesResponse
+    ): EmotesGeneral {
+        val emoteMappedList = arrayListOf<EmoteGeneral>()
+        bttvGlobalEmotes.forEach { emote ->
+            emoteMappedList.add(
+                EmoteGeneral(
+                    code = emote.code,
+                    id = emote.id,
+                    imageType = emote.imageType,
+                    url1x = "https://cdn.betterttv.net/frankerfacez_emote/${emote.id}/1",
+                    url2x = "https://cdn.betterttv.net/frankerfacez_emote/${emote.id}/2",
+                    url3x = "https://cdn.betterttv.net/frankerfacez_emote/${emote.id}/3"
+                )
+            )
+        }
+        bttvChannelEmotes.channelEmotes.forEach { emote ->
+            emoteMappedList.add(
+                EmoteGeneral(
+                    code = emote.code,
+                    id = emote.id,
+                    imageType = emote.imageType,
+                    url1x = "https://cdn.betterttv.net/frankerfacez_emote/${emote.id}/1",
+                    url2x = "https://cdn.betterttv.net/frankerfacez_emote/${emote.id}/2",
+                    url3x = "https://cdn.betterttv.net/frankerfacez_emote/${emote.id}/3"
+                )
+            )
+        }
+        ffzChannelEmotes.forEach { emote ->
+            emoteMappedList.add(
+                EmoteGeneral(
+                    code = emote.code,
+                    id = emote.id.toString(),
+                    imageType = emote.imageType,
+                    url1x = "https://cdn.betterttv.net/frankerfacez_emote/${emote.id}/1",
+                    url2x = "https://cdn.betterttv.net/frankerfacez_emote/${emote.id}/2",
+                    url3x = "https://cdn.betterttv.net/frankerfacez_emote/${emote.id}/3"
+                )
+            )
+        }
+
+        return EmotesGeneral(emoteMappedList)
     }
 }

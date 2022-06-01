@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.example.twitchclient.BuildConfig
 import com.example.twitchclient.C
+import com.example.twitchclient.data.api.BttvFfzApi
 import com.example.twitchclient.data.api.GraphQLApi
 import com.example.twitchclient.data.api.TwitchApi
 import com.example.twitchclient.data.api.UsherApi
@@ -31,6 +32,9 @@ import javax.net.ssl.X509TrustManager
 private val BASE_URL = "https://api.twitch.tv/helix/"
 private val AUTH_QUERY_PARAMETER = "Authorization"
 private val CLIENT_ID_QUERY_PARAMETER = "Client-Id"
+
+private val BTTV_BASE_URL = "https://api.betterttv.net/3/"
+
 
 @Module
 class NetModule {
@@ -75,6 +79,20 @@ class NetModule {
         OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .build()
+
+
+    @Provides
+    @Singleton
+    fun bttvApi(
+        okHttpClient: OkHttpClient
+    ): BttvFfzApi =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(BttvFfzApi::class.java)
+
 
     @Provides
     @Singleton

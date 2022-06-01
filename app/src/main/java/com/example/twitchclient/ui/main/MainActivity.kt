@@ -42,6 +42,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 R.id.streamFragment -> hideBottomNav()
                 R.id.authFragment -> hideBottomNav()
                 R.id.videoFragment -> hideBottomNav()
+                R.id.startFragment -> hideBottomNav()
                 else -> showBottomNav()
             }
         }
@@ -50,8 +51,6 @@ class MainActivity : DaggerAppCompatActivity() {
     lateinit var factory: MyViewModelFactory
 
     private val viewModel: MainViewModel by viewModels { factory }
-
-    private var currentNavigationItem = R.id.navigation_followings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

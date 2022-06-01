@@ -1,19 +1,24 @@
 package com.example.twitchclient.ui.videos
 
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FragmentVideosBinding
 import com.example.twitchclient.domain.entity.videos.VideoInfo
 import com.example.twitchclient.ui.channel.recycler.VideoAdapter
-import com.example.twitchclient.ui.games.GamesViewModel
 import com.example.twitchclient.ui.main.MainActivity
+
 
 class VideosFragment : Fragment() {
 
@@ -47,7 +52,12 @@ class VideosFragment : Fragment() {
 
     private fun initObservers() {
         viewModel.videos.observe(viewLifecycleOwner) { videos ->
-            setVideos(videos)
+            if (!videos.isEmpty()) {
+                setVideos(videos)
+            } else {
+                binding.tvNothingMessage.visibility = View.VISIBLE
+                binding.progressbar.visibility = View.GONE
+            }
         }
     }
 
@@ -81,4 +91,12 @@ class VideosFragment : Fragment() {
         popup.show()
     }
 
+    private fun test(){
+        val onComplete: BroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(ctxt: Context?, intent: Intent?) {
+                // your code
+            }
+        }
+        requireActivity().registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
 }

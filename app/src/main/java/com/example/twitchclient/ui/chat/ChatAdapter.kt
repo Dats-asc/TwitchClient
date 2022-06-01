@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.twitchclient.domain.entity.chat.ChatMessage
 import com.example.twitchclient.domain.entity.emotes.ChatEmotes
+import kotlin.coroutines.coroutineContext
 
 class ChatAdapter(
     private val fragment: Fragment,
@@ -82,7 +83,7 @@ class ChatAdapter(
         return spanBuilder
     }
 
-    private fun buildMessage(msg: String, builder: SpannableStringBuilder){
+    private fun buildMessage(msg: String, builder: SpannableStringBuilder) {
         val msgParts = msg.split(' ')
         var start = builder.length
         var end = 0

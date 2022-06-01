@@ -16,12 +16,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/onPrimary"
+            app:collapsedTitleTextColor="@color/white"
             app:contentScrim="@color/onPrimary"
-            app:expandedTitleGravity="bottom|center_horizontal"
-            app:expandedTitleMarginBottom="10dp"
+            app:expandedTitleGravity="top|center_horizontal"
+            app:expandedTitleMarginTop="?attr/actionBarSize"
+            app:expandedTitleTextColor="@color/white"
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             app:scrimAnimationDuration="200">
 
@@ -38,6 +41,7 @@
                     android:id="@+id/offline_image"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
+                    android:foreground="#80000000"
                     android:scaleType="centerCrop"
                     android:tintMode="src_atop"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -74,6 +78,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:textSize="24sp"
+                        android:visibility="invisible"
                         tools:text="test" />
 
                     <TextView
@@ -175,7 +180,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:menu="@menu/toolbar_menu"
-                app:navigationIcon="@drawable/ic_baseline_arrow_back_24" />
+                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+                tools:title="Channel name" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

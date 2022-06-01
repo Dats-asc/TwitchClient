@@ -1,11 +1,18 @@
 package com.example.twitchclient.ui.channel
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,6 +24,8 @@ import com.example.twitchclient.domain.entity.user.UserDetail
 import com.example.twitchclient.domain.entity.videos.VideoInfo
 import com.example.twitchclient.ui.channel.recycler.VideoAdapter
 import com.example.twitchclient.ui.main.MainActivity
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
 
 
 class ChannelDetailFragment : Fragment() {
@@ -31,6 +40,13 @@ class ChannelDetailFragment : Fragment() {
         (activity as MainActivity).factory
     }
 
+    private val locationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+            } else {
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +54,8 @@ class ChannelDetailFragment : Fragment() {
         binding = FragmentChannelDetailBinding.inflate(inflater, container, false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         userId = arguments?.getString(C.USER_ID).orEmpty()
+        binding.collapsingToolbarLayout.let {
+        }
         binding.root
     }
 
@@ -76,9 +94,9 @@ class ChannelDetailFragment : Fragment() {
         }
         viewModel.isSaved.observe(viewLifecycleOwner) { videoIsSaved ->
             if (videoIsSaved) {
-                Toast.makeText(requireContext(), "Видео уже сохранено", Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "Видео уже сохранено", Snackbar.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), "Видео сохранено", Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "Видео уже сохранено", Snackbar.LENGTH_SHORT).show()
             }
         }
         viewModel.test.observe(viewLifecycleOwner) {
@@ -99,6 +117,7 @@ class ChannelDetailFragment : Fragment() {
 
     private fun onUserDetail(user: UserDetail) {
         with(binding) {
+            toolbar.title = user.display_name
             if (!user.offline_image_url.isNullOrEmpty()) {
                 Glide.with(requireActivity())
                     .load(user.offline_image_url)
@@ -138,6 +157,13 @@ class ChannelDetailFragment : Fragment() {
                 binding.recyclerProgressbar.visibility = View.VISIBLE
             },
             onItemMenuClicked = { videoInfo, view ->
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_DENIED
+                ) {
+                    requestLocationAccess()
+                }
                 showPopup(view, videoInfo)
             }
         )
@@ -153,5 +179,9 @@ class ChannelDetailFragment : Fragment() {
         val inflater: MenuInflater = popup.menuInflater
         inflater.inflate(R.menu.video_item_menu, popup.menu)
         popup.show()
+    }
+
+    private fun requestLocationAccess() {
+        locationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
     }
 }
