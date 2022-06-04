@@ -99,6 +99,7 @@ class ChannelDetailFragment : Fragment() {
 
     private fun onUserDetail(user: UserDetail) {
         with(binding) {
+            toolbar.title = user.display_name
             if (!user.offline_image_url.isNullOrEmpty()) {
                 Glide.with(requireActivity())
                     .load(user.offline_image_url)

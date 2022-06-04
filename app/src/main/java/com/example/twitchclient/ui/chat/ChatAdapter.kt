@@ -8,8 +8,6 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.util.Log
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.text.getSpans
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,19 +16,18 @@ import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.twitchclient.domain.entity.chat.ChatMessage
-import com.example.twitchclient.domain.entity.emotes.ChatEmotes
+import com.example.twitchclient.domain.entity.emotes.GeneralEmotes
 
 class ChatAdapter(
     private val fragment: Fragment,
     private val messages: List<ChatMessage>,
-    private val chatEmotes: ChatEmotes,
+    private val chatEmotes: GeneralEmotes,
     private val action: (Int) -> Unit
 ) : RecyclerView.Adapter<ChatHolder>() {
 
     private val defaultEmoteSize = 80
     private val badgeSize = 48
     private val emoteBuffer = mutableListOf<EmoteBufferItem>()
-    private var emoteBufferIsLoaded = false
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -42,10 +39,6 @@ class ChatAdapter(
     override fun onBindViewHolder(holder: ChatHolder, position: Int) {
         val spannableString = createMessageSpannableString(messages[position], holder)
         holder.bind(spannableString)
-    }
-
-    override fun onViewDetachedFromWindow(holder: ChatHolder) {
-        super.onViewDetachedFromWindow(holder)
     }
 
     private fun createMessageSpannableString(
@@ -82,13 +75,10 @@ class ChatAdapter(
         return spanBuilder
     }
 
-    private fun buildMessage(msg: String, builder: SpannableStringBuilder){
+    private fun buildMessage(msg: String, builder: SpannableStringBuilder) {
         val msgParts = msg.split(' ')
         var start = builder.length
         var end = 0
-        msgParts.forEach { word ->
-            builder.append(" $word")
-        }
         msgParts.forEach { word ->
             val emote = emoteBuffer.find { it.name.equals(word, false) }
             start += 1
@@ -115,32 +105,18 @@ class ChatAdapter(
         var start = builder.length
         var end = 0
         messageParts.forEach { word ->
-            var twitchEmote = chatEmotes.twitchGlobalEmotes.find { it.name.equals(word, false) }
             start += 1
             end = start + word.length
-            twitchEmote?.let { twitchEmote ->
-                val resource = loadDrawable(twitchEmote.images.url_2x)
-                resource?.let { resource ->
-                    imageSpans.add(
-                        MessageImageSpan(
-                            name = twitchEmote.name,
-                            starts = start,
-                            ends = end,
-                            ImageSpan(resource, ImageSpan.ALIGN_BOTTOM)
-                        )
-                    )
-                }
-            }
 
-            val bttvChannelEmote =
-                chatEmotes.bttvChannelEmotes.find { it.code.equals(word, false) }
-            bttvChannelEmote?.let { bttvEmote ->
-                if (bttvEmote.imageType == "gif") {
-                    val resource = loadGif(bttvEmote.url2x, holder)
+            val allEmotes =
+                chatEmotes.emotes.find { it.code.equals(word, false) }
+            allEmotes?.let { emote ->
+                if (emote.imageType == "gif") {
+                    val resource = loadGif(emote.url2x, holder)
                     resource?.let { resource ->
                         imageSpans.add(
                             MessageImageSpan(
-                                name = bttvEmote.code,
+                                name = emote.code,
                                 starts = start,
                                 ends = end,
                                 ImageSpan(resource)
@@ -148,31 +124,17 @@ class ChatAdapter(
                         )
                     }
                 } else {
-                    val resource = loadDrawable(bttvEmote.url2x)
+                    val resource = loadDrawable(emote.url2x)
                     resource?.let { resource ->
                         imageSpans.add(
                             MessageImageSpan(
-                                name = bttvEmote.code,
+                                name = emote.code,
                                 starts = start,
                                 ends = end,
                                 ImageSpan(resource)
                             )
                         )
                     }
-                }
-            }
-            val ffzChannelEmote = chatEmotes.ffzChannelEmotes.find { it.code.equals(word, false) }
-            ffzChannelEmote?.let { ffzEmote ->
-                val resource = loadDrawable(ffzEmote.url2x)
-                resource?.let { resource ->
-                    imageSpans.add(
-                        MessageImageSpan(
-                            name = ffzEmote.code,
-                            starts = start,
-                            ends = end,
-                            ImageSpan(resource)
-                        )
-                    )
                 }
             }
             start += word.length

@@ -10,6 +10,7 @@
     <string name="follow_message">Чтобы видеть подписки войдите в аккаунт</string>
     <string name="geetings_message">Для использования приложения необходимо войти в свой Twitch аккаунт</string>
     <string name="title_videos">Сохранённое</string>
+    <string name="nothing_message">Здесь пока пусто</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

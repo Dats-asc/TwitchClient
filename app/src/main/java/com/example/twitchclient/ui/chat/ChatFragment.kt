@@ -11,6 +11,7 @@ import com.example.twitchclient.C
 import com.example.twitchclient.databinding.ChatFragmentBinding
 import com.example.twitchclient.domain.entity.chat.ChatMessage
 import com.example.twitchclient.domain.entity.emotes.ChatEmotes
+import com.example.twitchclient.domain.entity.emotes.GeneralEmotes
 import com.example.twitchclient.ui.main.MainActivity
 import com.google.android.material.snackbar.Snackbar
 
@@ -76,7 +77,7 @@ class ChatFragment : Fragment() {
                 onFailure = { Log.e("On chat message", it.message.toString()) }
             )
         }
-        viewModel.chatEmotes.observe(viewLifecycleOwner) {
+        viewModel.allEmotes.observe(viewLifecycleOwner) {
             it.fold(
                 onSuccess = { chatEmotes ->
                     onChatDataLoaded(chatEmotes)
@@ -88,8 +89,7 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private fun onChatDataLoaded(chatEmotes: ChatEmotes) {
-        this.chatEmotes = chatEmotes
+    private fun onChatDataLoaded(chatEmotes: GeneralEmotes) {
         initAdapter(chatEmotes)
     }
 
@@ -101,7 +101,7 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private fun initAdapter(chatEmotes: ChatEmotes) {
+    private fun initAdapter(chatEmotes: GeneralEmotes) {
         chatAdapter = ChatAdapter(
             this,
             chatMessages,

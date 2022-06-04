@@ -8,6 +8,9 @@ import com.example.twitchclient.data.api.mapper.BttvFfzMapper
 import com.example.twitchclient.data.api.mapper.TwitchMapper
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import javax.inject.Singleton
 
 

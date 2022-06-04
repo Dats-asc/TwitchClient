@@ -7,11 +7,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.example.twitchclient.BuildConfig
 import com.example.twitchclient.C
+import com.example.twitchclient.data.api.BttvFfzApi
 import com.example.twitchclient.data.api.GraphQLApi
 import com.example.twitchclient.data.api.TwitchApi
 import com.example.twitchclient.data.api.UsherApi
 import com.example.twitchclient.data.responses.usher.VideoPlaylistTokenDeserializer
 import com.example.twitchclient.data.responses.usher.VideoPlaylistTokenResponse
+import com.example.twitchclient.di.qualifier.UsherOkHttp
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -29,6 +31,7 @@ import javax.net.ssl.X509TrustManager
 
 
 private val BASE_URL = "https://api.twitch.tv/helix/"
+private val BTTV_API_BASE_URL = "https://api.betterttv.net/3/"
 private val AUTH_QUERY_PARAMETER = "Authorization"
 private val CLIENT_ID_QUERY_PARAMETER = "Client-Id"
 
@@ -93,6 +96,20 @@ class NetModule {
             .build()
             .create(TwitchApi::class.java)
 
+    @Provides
+    @Singleton
+    fun bttvApi(
+        okHttpClient: OkHttpClient,
+        gsonConverter: GsonConverterFactory
+    ): BttvFfzApi =
+        Retrofit.Builder()
+            .baseUrl(BTTV_API_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(gsonConverter)
+            .build()
+            .create(BttvFfzApi::class.java)
+
+
     @Singleton
     @Provides
     fun providesUsherApi(
@@ -110,8 +127,8 @@ class NetModule {
     @Singleton
     @Provides
     fun providesGraphQLApi(
-        @Named("gqlclient") client: OkHttpClient,
-        @Named("gqlclient") gsonConverterFactory: GsonConverterFactory
+        @UsherOkHttp client: OkHttpClient,
+        @UsherOkHttp gsonConverterFactory: GsonConverterFactory
     ): GraphQLApi {
         return Retrofit.Builder()
             .baseUrl("https://gql.twitch.tv/gql/")
@@ -123,7 +140,7 @@ class NetModule {
 
     @Singleton
     @Provides
-    @Named("gqlclient")
+    @UsherOkHttp
     fun providesGQLClient(): OkHttpClient {
         val builder = OkHttpClient.Builder().apply {
             if (BuildConfig.DEBUG) {
@@ -148,7 +165,7 @@ class NetModule {
 
     @Singleton
     @Provides
-    @Named("gqlclient")
+    @UsherOkHttp
     fun providesGsonConverterFactory(): GsonConverterFactory {
         return GsonConverterFactory.create(
             GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")

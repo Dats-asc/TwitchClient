@@ -30,6 +30,20 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <TextView
+            android:id="@+id/tv_nothing_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nothing_message"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_videos"
             android:layout_width="match_parent"
