@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:animateLayoutChanges="true"
+            android:background="@color/black"
             android:focusable="true"
             app:buffered_color="@color/white"
             app:controller_layout_id="@layout/custom__exoplayer_video_player"

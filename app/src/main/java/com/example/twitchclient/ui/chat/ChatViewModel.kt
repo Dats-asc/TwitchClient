@@ -10,13 +10,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.example.twitchclient.domain.entity.chat.ChatMessage
 import com.example.twitchclient.domain.entity.emotes.ChatEmotes
+import com.example.twitchclient.domain.entity.emotes.GeneralEmotes
 import com.example.twitchclient.domain.entity.emotes.bttv.BttvChanelEmotes
 import com.example.twitchclient.domain.entity.emotes.ffz.FfzChannelEmotes
 import com.example.twitchclient.domain.entity.emotes.twitch.TwitchGlobalEmotes
 import com.example.twitchclient.domain.entity.user.User
 import com.example.twitchclient.domain.usecases.bttvffz.GetBttvChannelEmotesUseCase
 import com.example.twitchclient.domain.usecases.bttvffz.GetFfzChannelEmotesUseCase
+import com.example.twitchclient.domain.usecases.bttvffz.GetGeneralEmotesUseCase
 import com.example.twitchclient.domain.usecases.twitch.GetTwitchGlobalEmotesUseCase
+import com.example.twitchclient.domain.usecases.twitch.GetUserByLoginUseCase
 import com.example.twitchclient.domain.usecases.twitch.PingUserUseCase
 import kotlinx.coroutines.launch
 import okhttp3.*
@@ -29,13 +32,18 @@ class ChatViewModel @Inject constructor(
     private val getTwitchGlobalEmotesUseCase: GetTwitchGlobalEmotesUseCase,
     private val getBttvChannelEmotesUseCase: GetBttvChannelEmotesUseCase,
     private val getFfzChannelEmotesUseCase: GetFfzChannelEmotesUseCase,
+    private val getUserByLoginUseCase: GetUserByLoginUseCase,
+    private val getAllEmotesUseCase: GetGeneralEmotesUseCase
 ) : ViewModel() {
 
     private var liveChatServiceBinder: LiveChatService.LocaleBinder? = null
 
     private lateinit var broadcasterLogin: String
 
-    private var broadcasterId = "22484632"
+    private var broadcasterInfo: MutableLiveData<User> = MutableLiveData()
+
+    private var _allEmotes: MutableLiveData<Result<GeneralEmotes>> = MutableLiveData()
+    val allEmotes: LiveData<Result<GeneralEmotes>> = _allEmotes
 
     private lateinit var onChatLoaded: () -> Unit
 
@@ -87,15 +95,51 @@ class ChatViewModel @Inject constructor(
     private var _chatEmotes: MutableLiveData<Result<ChatEmotes>> = MutableLiveData()
     val chatEmotes: LiveData<Result<ChatEmotes>> = _chatEmotes
 
+    init {
+        broadcasterInfo.observeForever {
+            initData()
+            emotes.observeForever {
+                bindChatService()
+            }
+            viewModelScope.launch {
+                try {
+                    _allEmotes.value =
+                        Result.success(getAllEmotesUseCase(broadcasterInfo.value?.id ?: ""))
+                } catch (e: Exception) {
+                    _allEmotes.value = Result.failure(e)
+                }
+            }
+        }
+
+        _allEmotes.observeForever {
+            it.fold(
+                onSuccess = { emotes ->
+                    val a = emotes
+                }, onFailure = {
+                    Log.e("", it.message.orEmpty())
+                }
+            )
+        }
+    }
+
     fun startChat(
         broadcasterLogin: String,
         onChatLoaded: () -> Unit
     ) {
         this.broadcasterLogin = broadcasterLogin
         this.onChatLoaded = onChatLoaded
-        initData()
-        emotes.observeForever() {
-            bindChatService()
+        getStreamerInfo(broadcasterLogin)
+    }
+
+    private fun getStreamerInfo(login: String) {
+        viewModelScope.launch {
+            try {
+                val user = getUserByLoginUseCase(login)
+                broadcasterInfo.value = user
+            } catch (e: java.lang.Exception) {
+                Log.e("", e.message.orEmpty())
+                Log.e("Chat error: ", e.message.orEmpty())
+            }
         }
     }
 
@@ -127,16 +171,20 @@ class ChatViewModel @Inject constructor(
     private fun initData() {
         viewModelScope.launch {
             try {
-                val userResponse = pingUserUseCase.invoke()
-                val twitchGlobalEmotesResponse = getTwitchGlobalEmotesUseCase.invoke()
-                val bttvChanelEmotesResponse = getBttvChannelEmotesUseCase.invoke(broadcasterId)
-                val ffzChannelEmotes = getFfzChannelEmotesUseCase.invoke(broadcasterId)
+                val userResponse = pingUserUseCase()
+                val twitchGlobalEmotesResponse = getTwitchGlobalEmotesUseCase()
+                val bttvChanelEmotesResponse =
+                    getBttvChannelEmotesUseCase(broadcasterInfo.value?.id ?: "")
+                val ffzChannelEmotes =
+                    getFfzChannelEmotesUseCase(broadcasterInfo.value?.id ?: "")
 
-                _chatEmotes.value = Result.success(ChatEmotes(
-                    twitchGlobalEmotes = twitchGlobalEmotesResponse.emotes,
-                    bttvChannelEmotes = bttvChanelEmotesResponse.channelEmotes,
-                    ffzChannelEmotes = ffzChannelEmotes.channelEmotes
-                ))
+                _chatEmotes.value = Result.success(
+                    ChatEmotes(
+                        twitchGlobalEmotes = twitchGlobalEmotesResponse.emotes,
+                        bttvChannelEmotes = bttvChanelEmotesResponse.channelEmotes,
+                        ffzChannelEmotes = ffzChannelEmotes.channelEmotes
+                    )
+                )
 
                 data = Triple(
                     Result.success(ffzChannelEmotes),

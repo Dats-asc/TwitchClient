@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.room.CoroutinesRoom
 import com.example.twitchclient.C
 import com.example.twitchclient.data.api.TwitchApi
 import com.example.twitchclient.data.api.mapper.TwitchMapper
@@ -19,6 +20,10 @@ import com.example.twitchclient.domain.entity.user.User
 import com.example.twitchclient.domain.entity.user.UserDetail
 import com.example.twitchclient.domain.entity.videos.Videos
 import com.example.twitchclient.domain.repository.TwitchRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -31,6 +36,8 @@ class TwitchRepositoryImpl @Inject constructor(
     private val twitchApi: TwitchApi,
     private val context: Context
 ) : TwitchRepository {
+
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     private val BASE_URL = "https://api.twitch.tv/helix/"
 
@@ -60,77 +67,104 @@ class TwitchRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserById(id: String): User {
-        return twitchMapper.mapUserResponse(twitchApi.getUserById(id))
+        return withContext(scope.coroutineContext) {
+
+            twitchMapper.mapUserResponse(twitchApi.getUserById(id))
+        }
     }
 
     override suspend fun getUserByLogin(login: String): User {
-        return twitchMapper.mapUserResponse(twitchApi.getUserByLogin(login))
+        return withContext(scope.coroutineContext) {
+            twitchMapper.mapUserResponse(twitchApi.getUserByLogin(login))
+        }
     }
 
     override suspend fun getFollowedStreams(userId: String): Streams {
-        val ids = arrayListOf<String>()
-        var ids2 = ""
-        val streams = twitchApi.getFollowedStreams(userId)
-        streams.data.forEach { stream ->
-            ids.add(stream.user_id)
-            ids2 += "id=${stream.user_id}&"
+        return withContext(scope.coroutineContext) {
+            val ids = arrayListOf<String>()
+            var ids2 = ""
+            val streams = twitchApi.getFollowedStreams(userId)
+            streams.data.forEach { stream ->
+                ids.add(stream.user_id)
+                ids2 += "id=${stream.user_id}&"
+            }
+            val users = twitchApi.getUsersByIds(ids)
+            twitchMapper.mapStreamResponse(streams, users)
         }
-        val users = twitchApi.getUsersByIds(ids)
-        return twitchMapper.mapStreamResponse(streams, users)
     }
 
     override suspend fun getTwitchGlobalEmotes(): TwitchGlobalEmotes {
-        return twitchMapper.mapTwitchGlobalEmotesResponse(twitchApi.getTwitchGlobalEmotes())
+        return withContext(scope.coroutineContext) {
+            twitchMapper.mapTwitchGlobalEmotesResponse(twitchApi.getTwitchGlobalEmotes())
+        }
     }
 
     override suspend fun getChannelsByRequest(request: String): Channels {
-        return twitchMapper.mapSearchChannelResponse(twitchApi.getChannelsByRequest(request))
+        return withContext(scope.coroutineContext) {
+            twitchMapper.mapSearchChannelResponse(twitchApi.getChannelsByRequest(request))
+        }
     }
 
     override suspend fun getStreams(cursor: String?): Streams {
-        val ids = arrayListOf<String>()
-        val streams = twitchApi.getStreams(cursor)
-        streams.data.forEach { stream ->
-            ids.add(stream.user_id)
+        return withContext(scope.coroutineContext) {
+            val ids = arrayListOf<String>()
+            val streams = twitchApi.getStreams(cursor)
+            streams.data.forEach { stream ->
+                ids.add(stream.user_id)
+            }
+            val users = twitchApi.getUsersByIds(ids)
+            twitchMapper.mapStreamResponse(streams, users)
         }
-        val users = twitchApi.getUsersByIds(ids)
-        return twitchMapper.mapStreamResponse(streams, users)
     }
 
     override suspend fun getSteamsByGame(gameId: String, cursor: String?): Streams {
-        val ids = arrayListOf<String>()
-        val streams = twitchApi.getStreamsByGame(gameId, cursor)
-        streams.data.forEach { stream ->
-            ids.add(stream.user_id)
+        return withContext(scope.coroutineContext) {
+            val ids = arrayListOf<String>()
+            val streams = twitchApi.getStreamsByGame(gameId, cursor)
+            streams.data.forEach { stream ->
+                ids.add(stream.user_id)
+            }
+            val users = twitchApi.getUsersByIds(ids)
+            twitchMapper.mapStreamResponse(streams, users)
         }
-        val users = twitchApi.getUsersByIds(ids)
-        return twitchMapper.mapStreamResponse(streams, users)
     }
 
     override suspend fun getGame(id: String): Games {
-        return twitchMapper.mapGameResponse(twitchApi.getGame(id))
+        return withContext(scope.coroutineContext) {
+            twitchMapper.mapGameResponse(twitchApi.getGame(id))
+        }
     }
 
     override suspend fun getTopGames(cursor: String?): Games {
-        return twitchMapper.mapGamesResponse(twitchApi.getTopGames(cursor))
+        return withContext(scope.coroutineContext) {
+            twitchMapper.mapGamesResponse(twitchApi.getTopGames(cursor))
+        }
     }
 
     override suspend fun getChannelsAfter(request: String, after: String): Channels {
-        return twitchMapper.mapSearchChannelResponse(twitchApi.getChannelsAfter(request, after))
+        return withContext(scope.coroutineContext) {
+            twitchMapper.mapSearchChannelResponse(twitchApi.getChannelsAfter(request, after))
+        }
     }
 
     override suspend fun getGamesByRequest(request: String, cursor: String?): Games {
-        return twitchMapper.mapGamesResponse(twitchApi.getGamesByRequest(request, cursor))
+        return withContext(scope.coroutineContext) {
+            twitchMapper.mapGamesResponse(twitchApi.getGamesByRequest(request, cursor))
+        }
     }
 
     override suspend fun getUserDetail(userId: String): UserDetail {
-        val user = twitchApi.getUserById(userId)
-        val channelInfo = twitchApi.getStreamsById(userId)
-        return twitchMapper.mapUserDetail(user, channelInfo)
+        return withContext(scope.coroutineContext) {
+            val user = twitchApi.getUserById(userId)
+            val channelInfo = twitchApi.getStreamsById(userId)
+            twitchMapper.mapUserDetail(user, channelInfo)
+        }
     }
 
     override suspend fun getChannelVideos(userId: String, cursor: String?): Videos {
-        return twitchMapper.mapVideosResponse(twitchApi.getChannelVideos(userId, cursor))
+        return withContext(scope.coroutineContext) {
+            twitchMapper.mapVideosResponse(twitchApi.getChannelVideos(userId, cursor))
+        }
     }
 
 }
