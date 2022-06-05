@@ -17,6 +17,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.twitchclient.domain.entity.chat.ChatMessage
 import com.example.twitchclient.domain.entity.emotes.GeneralEmotes
+import com.google.android.exoplayer2.offline.DownloadService
 
 class ChatAdapter(
     private val fragment: Fragment,
@@ -49,7 +50,7 @@ class ChatAdapter(
             //TODO append user badges
             it.append(chatMessage.username)
                 .setSpan(
-                    ForegroundColorSpan(Color.BLUE),
+                    ForegroundColorSpan(Color.CYAN),
                     0,
                     chatMessage.username.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
