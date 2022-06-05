@@ -20,7 +20,8 @@ class DatabaseMapper {
             url = videoInfo.url,
             previewUrl = videoInfo.previewUrl,
             viewCount = videoInfo.viewCount,
-            duration = videoInfo.duration
+            duration = videoInfo.duration,
+            hlsUrl = videoInfo.hlsUrl
         )
     }
 
@@ -36,7 +37,8 @@ class DatabaseMapper {
             url = video.url,
             previewUrl = video.previewUrl,
             viewCount = video.viewCount,
-            duration = video.duration
+            duration = video.duration,
+            hlsUrl = video.hlsUrl
         )
     }
 
@@ -55,7 +57,8 @@ class DatabaseMapper {
                     url = dbVideo.url,
                     previewUrl = dbVideo.previewUrl,
                     viewCount = dbVideo.viewCount,
-                    duration = dbVideo.duration
+                    duration = dbVideo.duration,
+                    hlsUrl = dbVideo.hlsUrl
                 )
             )
         }

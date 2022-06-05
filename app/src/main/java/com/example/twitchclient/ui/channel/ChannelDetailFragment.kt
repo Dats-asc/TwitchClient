@@ -1,12 +1,16 @@
 package com.example.twitchclient.ui.channel
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.*
-import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -17,6 +21,9 @@ import com.example.twitchclient.domain.entity.user.UserDetail
 import com.example.twitchclient.domain.entity.videos.VideoInfo
 import com.example.twitchclient.ui.channel.recycler.VideoAdapter
 import com.example.twitchclient.ui.main.MainActivity
+import com.example.twitchclient.ui.videos.DownloadVideosService
+import com.google.android.exoplayer2.offline.DownloadRequest
+import com.google.android.exoplayer2.offline.DownloadService
 
 
 class ChannelDetailFragment : Fragment() {
@@ -26,6 +33,8 @@ class ChannelDetailFragment : Fragment() {
     private lateinit var userId: String
 
     private lateinit var videoAdapter: VideoAdapter
+
+    private var currentVideo: VideoInfo? = null
 
     private val viewModel: ChannelDetailViewModel by viewModels {
         (activity as MainActivity).factory
@@ -81,12 +90,22 @@ class ChannelDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), "Видео сохранено", Toast.LENGTH_SHORT).show()
             }
         }
-        viewModel.test.observe(viewLifecycleOwner) {
-            it.fold(onSuccess = {
-                it
+        viewModel.playlist.observe(viewLifecycleOwner) {
+            it.fold(onSuccess = { playlist ->
+                currentVideo?.hlsUrl = playlist.urls.last()
+                val downloadRequest = DownloadRequest.Builder(
+                    currentVideo?.id.orEmpty(),
+                    Uri.parse(playlist.urls.last())
+                ).build()
+                DownloadService.sendAddDownload(
+                    requireContext(),
+                    DownloadVideosService::class.java,
+                    downloadRequest,
+                    false
+                )
+                viewModel.addVideo(currentVideo!!)
             }, onFailure = {
                 it.message
-                val a = 0
             })
         }
     }
@@ -131,7 +150,7 @@ class ChannelDetailFragment : Fragment() {
             onItemClicked = { videoInfo ->
                 findNavController().navigate(
                     R.id.action_channelDetailFragment_to_videoFragment,
-                    bundleOf(C.VIDEO_ID to videoInfo.id)
+                    bundleOf(C.VIDEO_ID to videoInfo.id, C.VIDEO_INFO to videoInfo)
                 )
             },
             onNextVideo = {
@@ -148,7 +167,8 @@ class ChannelDetailFragment : Fragment() {
     private fun showPopup(v: View, video: VideoInfo) {
         val popup = PopupMenu(requireActivity(), v)
         popup.setOnMenuItemClickListener {
-            viewModel.addVideo(video)
+            currentVideo = video
+            viewModel.getPlaylist(video.id)
             true
         }
         val inflater: MenuInflater = popup.menuInflater

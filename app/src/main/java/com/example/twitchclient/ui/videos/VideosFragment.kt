@@ -7,7 +7,10 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FragmentVideosBinding
 import com.example.twitchclient.domain.entity.videos.VideoInfo
@@ -59,8 +62,11 @@ class VideosFragment : Fragment() {
     private fun initAdapter() {
         videosAdapter = VideoAdapter(
             arrayListOf(),
-            onItemClicked = {
-
+            onItemClicked = {videoInfo ->
+                findNavController().navigate(
+                    R.id.action_navigation_videos_to_videoFragment,
+                    bundleOf(C.VIDEO_INFO to videoInfo)
+                )
             },
             onNextVideo = {},
             onItemMenuClicked = { video, view ->

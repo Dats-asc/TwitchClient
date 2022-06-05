@@ -1,6 +1,5 @@
 package com.example.twitchclient.ui.channel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,11 +15,7 @@ import com.example.twitchclient.domain.usecases.twitch.GetUserDetailUseCase
 import com.example.twitchclient.domain.usecases.video.AddVideoUseCase
 import com.example.twitchclient.domain.usecases.video.GetAllVideosUseCase
 import com.example.twitchclient.domain.usecases.video.VideoIsSavedUseCase
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
-import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -51,7 +46,7 @@ class ChannelDetailViewModel @Inject constructor(
     private var _isSaved: MutableLiveData<Boolean> = MutableLiveData()
     val isSaved: LiveData<Boolean> = _isSaved
 
-    var test: MutableLiveData<Result<VideoPlaylist>> = MutableLiveData()
+    var playlist: MutableLiveData<Result<VideoPlaylist>> = MutableLiveData()
 
     fun addVideo(video: VideoInfo) {
         _isSaved.observeForever { isSaved ->
@@ -114,13 +109,13 @@ class ChannelDetailViewModel @Inject constructor(
         }
     }
 
-    fun testGet() {
+    fun getPlaylist(id: String) {
         viewModelScope.launch {
             try {
-                test.value =
-                    Result.success(usherRepository.loadVideoPlaylist(C.GQL_CLIENT_ID, "1482850303"))
+                playlist.value =
+                    Result.success(usherRepository.loadVideoPlaylist(C.GQL_CLIENT_ID, id))
             } catch (e: Exception) {
-                test.value = Result.failure(e)
+                playlist.value = Result.failure(e)
             }
         }
     }

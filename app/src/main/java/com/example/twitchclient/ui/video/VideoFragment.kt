@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitchclient.C
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.FragmentVideoBinding
+import com.example.twitchclient.domain.entity.videos.VideoInfo
 import com.example.twitchclient.domain.entity.videos.VideoPlaylist
 import com.example.twitchclient.ui.main.MainActivity
 import com.google.android.exoplayer2.ExoPlayer
@@ -32,7 +33,9 @@ class VideoFragment : Fragment() {
 
     private lateinit var binding: FragmentVideoBinding
 
-    private lateinit var videoId: String
+    private var videoId: String? = null
+
+    private lateinit var videoInfo: VideoInfo
 
     private lateinit var player: ExoPlayer
 
@@ -47,13 +50,18 @@ class VideoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = FragmentVideoBinding.inflate(inflater, container, false).let {
         binding = FragmentVideoBinding.inflate(inflater, container, false)
-        videoId = arguments?.getString(C.VIDEO_ID).orEmpty()
+        videoId = arguments?.getString(C.VIDEO_ID)
+        videoInfo = arguments?.getParcelable(C.VIDEO_INFO)!!
         binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.start(videoId)
+        if (!videoId.isNullOrEmpty()){
+            viewModel.start(videoInfo, PlayerType.ONLINE)
+        } else{
+            viewModel.start(videoInfo, PlayerType.OFFLINE)
+        }
         initObservers()
     }
 
