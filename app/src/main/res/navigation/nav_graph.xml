@@ -136,5 +136,9 @@
         android:id="@+id/navigation_videos"
         android:name="com.example.twitchclient.ui.videos.VideosFragment"
         android:label="fragment_videos"
-        tools:layout="@layout/fragment_videos" />
+        tools:layout="@layout/fragment_videos" >
+        <action
+            android:id="@+id/action_navigation_videos_to_videoFragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
 </navigation>

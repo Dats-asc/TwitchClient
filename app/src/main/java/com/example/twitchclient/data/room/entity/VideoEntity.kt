@@ -16,4 +16,5 @@ data class VideoEntity(
     val previewUrl: String,
     val viewCount: Int,
     val duration: String,
+    var hlsUrl: String?
 )

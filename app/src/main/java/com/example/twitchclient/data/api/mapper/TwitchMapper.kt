@@ -186,7 +186,8 @@ class TwitchMapper {
                             .replace("%{height}", "360")
                     },
                     viewCount = video.view_count,
-                    duration = video.duration
+                    duration = video.duration,
+                    hlsUrl = null
                 )
             )
         }

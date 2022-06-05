@@ -1,6 +1,7 @@
 package com.example.twitchclient
 
 object C {
+    const val VIDEO_INFO = "VIDEO_INFO"
     const val VIDEO_URL = "VIDEO_URL"
     const val VIDEO_ID = "VIDEO_ID"
     const val GQL_CLIENT_ID = "kimne78kx3ncx6brgo4mv6wki5h1ko"

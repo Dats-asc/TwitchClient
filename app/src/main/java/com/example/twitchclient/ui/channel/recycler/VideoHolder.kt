@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.twitchclient.R
 import com.example.twitchclient.databinding.ItemVideoBinding
 import com.example.twitchclient.domain.entity.videos.VideoInfo
@@ -22,6 +23,7 @@ class VideoHolder(
         with(binding) {
             Glide.with(itemView.context)
                 .load(item.previewUrl)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(videoPreview)
             tvVideoDescription.text = item.title
             tvPublishingDate.text = "Опубликованно: ${item.publishedAt.split("T")[0]}"
