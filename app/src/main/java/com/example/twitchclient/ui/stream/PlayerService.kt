@@ -125,7 +125,7 @@ class PlayerService : Service() {
             .setTrackSelector(trackSelector)
             .build()
             .also {
-                onPlayerCreated.invoke(it)
+                onPlayerCreated.invoke(it) // Возврат плеера во фрагмент
             }
         createMediaSource()
         player.setMediaSource(mediaSource)

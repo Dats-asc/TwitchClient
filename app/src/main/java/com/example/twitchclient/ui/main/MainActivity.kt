@@ -42,6 +42,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 R.id.streamFragment -> hideBottomNav()
                 R.id.authFragment -> hideBottomNav()
                 R.id.videoFragment -> hideBottomNav()
+                R.id.startFragment -> hideBottomNav()
                 else -> showBottomNav()
             }
         }

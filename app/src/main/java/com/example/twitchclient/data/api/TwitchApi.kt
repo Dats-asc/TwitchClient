@@ -50,7 +50,7 @@ interface TwitchApi {
 
     @GET("/helix/search/channels")
     suspend fun getChannelsAfter(
-        @Query("query") query: String,
+        @Query( "query") query: String,
         @Query("after") cursor: String
     ): SearchChannelsResponse
 

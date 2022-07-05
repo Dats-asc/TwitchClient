@@ -61,17 +61,6 @@ class AuthFragment : Fragment() {
                     }
                     return super.shouldOverrideUrlLoading(view, request)
                 }
-
-//                override fun onReceivedError(
-//                    view: WebView?,
-//                    request: WebResourceRequest?,
-//                    error: WebResourceError?
-//                ) {
-//                    Handler(Looper.getMainLooper()).post {
-//                        saveAccessToken(view?.url ?: "")
-//                    }
-//                    super.onReceivedError(view, request, error)
-//                }
             }
             loadUrl(AUTH_URL)
         }
